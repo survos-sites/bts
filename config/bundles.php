@@ -34,4 +34,7 @@ return [
     Survos\MediaBundle\SurvosMediaBundle::class => ['all' => true],
     Museado\DataBundle\MuseadoDataBundle::class => ['all' => true],
     Symfony\UX\Translator\UxTranslatorBundle::class => ['all' => true],
+    Survos\AtlasBundle\SurvosAtlasBundle::class => ['all' => true],
+    Survos\Kit\SurvosKitBundle::class => ['all' => true],
+    Survos\FieldBundle\SurvosFieldBundle::class => ['all' => true],
 ];

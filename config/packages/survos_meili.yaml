@@ -3,3 +3,4 @@ survos_meili:
     apiKey: '%env(default::MEILI_API_KEY)%'
     searchKey: '%env(default::MEILI_SEARCH_KEY)%'
     multiLingual: true
+    locale_prefix: true
