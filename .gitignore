@@ -23,3 +23,8 @@
 data
 config.bat
 node_modules
+
+# macOS Finder metadata. Two of these were committed by accident; they are
+# per-machine junk that nothing reads.
+.DS_Store
+**/.DS_Store

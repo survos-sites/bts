@@ -196,9 +196,8 @@ function load_database(
         io()->warning("stopped, no jsonl, maybe run another command?");
         return;
     }
-    // ugh, a side effect is to create images.  Need a better way.  images:extract?
-    if (true || !file_exists($dataset->jsonl)) {
-        $cmd = 'bin/console import:convert %s --dataset=%s';
+    if (!file_exists($dataset->jsonl)) {
+        $cmd = 'bin/console import:convert --no-debug %s --dataset=%s';
         $convertCmd = sprintf(
             $cmd,
             $dataset->target,
