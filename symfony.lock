@@ -115,6 +115,9 @@
             "bin/phpunit"
         ]
     },
+    "survos/atlas-bundle": {
+        "version": "2.10.19"
+    },
     "survos/babel-bundle": {
         "version": "2.0.77"
     },
@@ -124,17 +127,26 @@
     "survos/core-bundle": {
         "version": "2.0.77"
     },
+    "survos/data-bundle": {
+        "version": "2.31.2"
+    },
     "survos/deployment-bundle": {
         "version": "2.0.89"
     },
     "survos/ez-bundle": {
         "version": "2.0.77"
     },
+    "survos/field-bundle": {
+        "version": "2.24.37"
+    },
     "survos/import-bundle": {
         "version": "2.0.77"
     },
     "survos/jsonl-bundle": {
         "version": "2.0.77"
+    },
+    "survos/kit-bundle": {
+        "version": "2.28.7"
     },
     "survos/lingua-bundle": {
         "version": "2.0.77"
@@ -491,6 +503,18 @@
         },
         "files": [
             "config/packages/messenger.yaml"
+        ]
+    },
+    "symfony/webhook": {
+        "version": "8.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "7.3",
+            "ref": "b70844963dc84e9a99b94ae552efe691d74b087f"
+        },
+        "files": [
+            "config/routes/webhook.yaml"
         ]
     },
     "symfony/workflow": {
