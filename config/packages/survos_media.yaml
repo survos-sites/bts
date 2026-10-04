@@ -2,10 +2,11 @@
 survos_media:
     default_locale:       en
     cache_ttl:            3600
-    imgproxy:
-        base_url:             'https://imgproxy.survos.com'
-        key:                  '%env(IMGPROXY_KEY)%'
-        salt:                 '%env(IMGPROXY_SALT)%'
     media_server:
         host:                 'https://mediary.survos.com'
         apiKey:               null
+
+survos_imgproxy:
+    host: 'https://imgproxy.survos.com'
+    key: '%env(IMGPROXY_KEY)%'
+    salt: '%env(IMGPROXY_SALT)%'

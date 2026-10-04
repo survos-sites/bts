@@ -687,7 +687,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         signing_algorithm?: scalar|Param|null, // Default: "sha256"
  *         routing?: array<string, array{ // Default: []
  *             service?: scalar|Param|null,
- *             secret?: scalar|Param|null, // The secret used to verify incoming request signatures. It must be set in production: with an empty value, requests from any sender are accepted. // Default: ""
+ *             secret?: scalar|Param|null, // The secret used to verify incoming request signatures. It must be set in production: with an empty value, depending on the parser, requests from any sender are accepted or every request is rejected. // Default: ""
  *         }>,
  *     },
  *     remote_event?: bool|array{ // RemoteEvent configuration
@@ -1311,9 +1311,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             lifetime?: int|Param, // Default: 31536000
  *             path?: scalar|Param|null, // Default: "/"
  *             domain?: scalar|Param|null, // Default: null
- *             secure?: true|false|"auto"|Param, // Default: "auto"
+ *             secure?: true|false|"auto"|Param, // Defaults to the value of "framework.session.cookie_secure", or to "auto".
  *             httponly?: bool|Param, // Default: true
- *             samesite?: null|"lax"|"strict"|"none"|Param, // Default: "lax"
+ *             samesite?: null|"lax"|"strict"|"none"|Param, // Defaults to the value of "framework.session.cookie_samesite", or to "lax".
  *             always_remember_me?: bool|Param, // Default: false
  *             remember_me_parameter?: scalar|Param|null, // Default: "_remember_me"
  *         },
@@ -1335,6 +1335,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * }
  * @psalm-type MonologConfig = array{
  *     use_microseconds?: scalar|Param|null, // Default: true
+ *     timezone?: string|Param, // The timezone used for the timestamp of every log record (e.g. "UTC" or "Europe/Paris"). Defaults to the PHP default timezone. // Default: null
  *     channels?: list<scalar|Param|null>,
  *     handlers?: array<string, array{ // Default: []
  *         type?: scalar|Param|null,
@@ -1346,6 +1347,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         interactive_only?: bool|Param, // Default: false
  *         app_name?: scalar|Param|null, // Default: null
  *         include_stacktraces?: bool|Param, // Default: false
+ *         base_path?: scalar|Param|null, // Default: null
  *         process_psr_3_messages?: array{
  *             enabled?: bool|Param|null, // Default: null
  *             date_format?: scalar|Param|null,
@@ -1357,7 +1359,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         use_locking?: bool|Param, // Default: false
  *         filename_format?: scalar|Param|null, // Default: "{filename}-{date}"
  *         date_format?: scalar|Param|null, // Default: "Y-m-d"
- *         ident?: scalar|Param|null, // Default: false
+ *         ident?: scalar|Param|null, // Default: "php"
  *         logopts?: scalar|Param|null, // Default: 1
  *         facility?: scalar|Param|null, // Default: "user"
  *         max_files?: scalar|Param|null, // Default: 0
@@ -1394,6 +1396,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         title?: scalar|Param|null, // Default: null
  *         host?: scalar|Param|null, // Default: null
  *         port?: scalar|Param|null, // Default: 514
+ *         rfc?: scalar|Param|null, // Default: 1
  *         config?: list<scalar|Param|null>,
  *         members?: list<scalar|Param|null>,
  *         connection_string?: scalar|Param|null,
@@ -1404,6 +1407,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         connection_timeout?: scalar|Param|null,
  *         persistent?: bool|Param,
  *         message_type?: scalar|Param|null, // Default: 0
+ *         expand_newlines?: bool|Param, // Default: false
  *         parse_mode?: scalar|Param|null, // Default: null
  *         disable_webpage_preview?: bool|Param|null, // Default: null
  *         disable_notification?: bool|Param|null, // Default: null
@@ -1450,7 +1454,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             database?: scalar|Param|null, // Default: 0
  *             key_name?: scalar|Param|null, // Default: "monolog_redis"
  *         },
- *         predis?: Param|string|array{
+ *         predis?: Param|string|array{ // Deprecated: The "predis" option is deprecated and ignored, use the "redis" option to configure the Predis client.
  *             id?: scalar|Param|null,
  *             host?: scalar|Param|null,
  *         },
@@ -1459,6 +1463,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         subject?: scalar|Param|null,
  *         content_type?: scalar|Param|null, // Default: null
  *         headers?: list<scalar|Param|null>,
+ *         parameters?: list<scalar|Param|null>,
  *         mailer?: scalar|Param|null, // Default: null
  *         email_prototype?: Param|string|array{
  *             id?: scalar|Param|null,
@@ -1485,8 +1490,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * }
  * @psalm-type SurvosImportConfig = array{
  *     dir?: scalar|Param|null, // Default directory for data files // Default: "data"
+ *     work_compression?: scalar|Param|null, // Dataset stage output (normalize, enrich, ai): false writes <core>.jsonl; 0-9 writes <core>.jsonl.gz at that gzip level // Default: false
  *     dto_namespace_roots?: list<scalar|Param|null>,
  *     dto_mappings?: array<string, scalar|Param|null>,
+ * }
+ * @psalm-type SurvosJsonlConfig = array{
+ *     compression_level?: int|Param, // Default: 1
  * }
  * @psalm-type SurvosMeiliConfig = array{
  *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
@@ -1579,7 +1588,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     base_layout?: scalar|Param|null, // Default: "base.html.twig"
  * }
  * @psalm-type TwigComponentConfig = array{
- *     defaults?: array<string, Param|string|array{ // Default: ["__deprecated__use_old_naming_behavior"]
+ *     defaults?: array<string, Param|string|array{ // Default: []
  *         template_directory?: scalar|Param|null, // Default: "components"
  *         name_prefix?: scalar|Param|null, // Default: ""
  *     }>,
@@ -1588,7 +1597,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: bool|Param, // Default: "%kernel.debug%"
  *         collect_components?: bool|Param, // Collect components instances // Default: true
  *     },
- *     controllers_json?: scalar|Param|null, // Deprecated: The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0. // Default: null
  * }
  * @psalm-type SurvosEzConfig = array{
  *     enabled?: bool|Param, // Default: true
@@ -1608,6 +1616,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     iconify?: bool|array{ // Configuration for the remote icon service.
  *         enabled?: bool|Param, // Default: true
  *         on_demand?: bool|Param, // Whether to download icons "on demand". // Default: true
+ *         auto_lock?: bool|Param, // Persist "on demand" icons to the local icon directory (see "icon_dir"). Recommended in dev only. Requires "on_demand" to be enabled. // Default: false
  *         endpoint?: scalar|Param|null, // The endpoint for the Iconify icons API. // Default: "https://api.iconify.design"
  *     },
  *     ignore_not_found?: bool|Param, // Ignore error when an icon is not found. Set to 'true' to fail silently. // Default: false
@@ -1995,6 +2004,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     messenger?: bool|Param, // Default: true
  *     query?: bool|Param, // Default: true
  *     query_bindings?: bool|Param, // Default: true
+ *     http_client?: bool|Param, // Default: true
  *     templates?: bool|Param, // Default: true
  *     user?: bool|Param, // Default: true
  *     transport?: scalar|Param|null, // Default: "async"
@@ -2005,18 +2015,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * @psalm-type SurvosMediaConfig = array{
  *     default_locale?: scalar|Param|null, // Default: "en"
  *     cache_ttl?: scalar|Param|null, // Default: 3600
- *     sais_integration?: bool|Param, // Default: true
- *     imgproxy?: array{
- *         base_url?: scalar|Param|null, // Default: "https://imgproxy.survos.com"
- *         key?: scalar|Param|null, // Default: "%env(IMGPROXY_KEY)%"
- *         salt?: scalar|Param|null, // Default: "%env(IMGPROXY_SALT)%"
- *     },
  *     media_server?: array{
  *         host?: scalar|Param|null, // Default: "https://media.wip"
  *         apiKey?: scalar|Param|null, // Default: null
  *         resize_path?: scalar|Param|null, // Default: "/media/{preset}/{id}"
  *     },
- *     presets?: array<string, array{ // Default: {"small":{"resize":"fill","width":192,"height":192},"medium":{"resize":"fit","width":400,"height":400},"large":{"resize":"fit","width":800,"height":800}}
+ *     presets?: array<string, array{ // Default: {"small":{"resize":"fill","width":192,"height":192},"medium":{"resize":"fit","width":400,"height":400},"large":{"resize":"fit","width":800,"height":800},"ai":{"resize":"fit","width":512,"height":512},"thumb":{"resize":"fit","width":300,"height":300}}
  *         resize?: scalar|Param|null, // Default: "fit"
  *         width?: int|Param,
  *         height?: int|Param,
@@ -2028,14 +2032,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         access_token?: scalar|Param|null,
  *         options?: list<mixed>,
  *     }>,
- * }
- * @psalm-type MuseadoDataConfig = array{
- *     data_dir?: scalar|Param|null, // Default: "%env(APP_DATA_DIR)%"
- *     dataset_root?: scalar|Param|null, // Default: "data"
- *     pixie_root?: scalar|Param|null, // Default: "pixie"
- *     runs_root?: scalar|Param|null, // Default: "runs"
- *     cache_root?: scalar|Param|null, // Default: "cache"
- *     default_object_filename?: scalar|Param|null, // Default: "obj.jsonl"
  * }
  * @psalm-type UxTranslatorConfig = array{
  *     dump_directory?: scalar|Param|null, // The directory where translations and TypeScript types are dumped. // Default: "%kernel.project_dir%/var/translations"
@@ -2058,6 +2054,45 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
  *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
  * }
+ * @psalm-type SurvosFetchConfig = array{
+ *     persistent_cache_path?: scalar|Param|null, // SQLite file backing PersistentFetcher -- an app-controlled-TTL cache independent of what (if anything) the origin sends as Cache-Control/Expires. Deliberately outside %kernel.cache_dir% so it survives cache:clear. // Default: "%kernel.project_dir%/var/data/fetch_cache.db"
+ * }
+ * @psalm-type SurvosImgproxyConfig = array{
+ *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
+ *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
+ *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
+ *     host?: scalar|Param|null, // Default: "%env(default::IMGPROXY_HOST)%"
+ *     key?: scalar|Param|null, // Default: "%env(default::IMGPROXY_KEY)%"
+ *     salt?: scalar|Param|null, // Default: "%env(default::IMGPROXY_SALT)%"
+ *     presets?: array<string, array{ // Default: {"tiny":{"width":200,"height":200,"resize":"fit","quality":70,"format":"webp"},"thumb":{"width":400,"height":400,"resize":"fit","quality":80,"format":"webp"},"observe":{"width":512,"height":512,"resize":"fit","quality":80,"format":"webp"},"display":{"width":600,"height":400,"resize":"fit","quality":80,"format":"webp"},"archive":{"width":0,"height":0,"resize":"fit","quality":88,"format":"webp","strip_metadata":false}}
+ *         width?: int|Param,
+ *         height?: int|Param,
+ *         resize?: scalar|Param|null, // Default: "fit"
+ *         quality?: int|Param, // Default: null
+ *         format?: scalar|Param|null, // Default: null
+ *         strip_metadata?: bool|Param|null, // Default: null
+ *     }>,
+ * }
+ * @psalm-type SurvosIiifConfig = array{
+ *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: false
+ *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
+ *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
+ * }
+ * @psalm-type SurvosJsTwigConfig = array{
+ *     debug?: bool|Param, // Default: false
+ *     version?: scalar|Param|null, // Default: 1
+ *     db?: scalar|Param|null, // Default: "db"
+ *     routing?: array{
+ *         routes_to_expose?: list<scalar|Param|null>,
+ *     },
+ *     stores?: list<array{ // Default: []
+ *         batch?: int|Param, // batch size when loading api // Default: null
+ *         name?: scalar|Param|null, // the store name
+ *         schema?: scalar|Param|null, // the index definition
+ *         url?: scalar|Param|null, // the API to use to load if empty. json-ld iterates through pages
+ *         response_key?: scalar|Param|null, // key if API returns an object response, e.g. dummyjson returns {'products': [...]}
+ *     }>,
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -2072,6 +2107,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     security?: SecurityConfig,
  *     monolog?: MonologConfig,
  *     survos_import?: SurvosImportConfig,
+ *     survos_jsonl?: SurvosJsonlConfig,
  *     survos_meili?: SurvosMeiliConfig,
  *     twig_component?: TwigComponentConfig,
  *     survos_ez?: SurvosEzConfig,
@@ -2083,10 +2119,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     api_platform?: ApiPlatformConfig,
  *     inspector?: InspectorConfig,
  *     survos_media?: SurvosMediaConfig,
- *     museado_data?: MuseadoDataConfig,
  *     ux_translator?: UxTranslatorConfig,
  *     survos_kit?: SurvosKitConfig,
  *     survos_field?: SurvosFieldConfig,
+ *     survos_fetch?: SurvosFetchConfig,
+ *     survos_imgproxy?: SurvosImgproxyConfig,
+ *     survos_iiif?: SurvosIiifConfig,
+ *     survos_js_twig?: SurvosJsTwigConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -2104,6 +2143,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         maker?: MakerConfig,
  *         survos_import?: SurvosImportConfig,
+ *         survos_jsonl?: SurvosJsonlConfig,
  *         survos_meili?: SurvosMeiliConfig,
  *         survos_code?: SurvosCodeConfig,
  *         twig_component?: TwigComponentConfig,
@@ -2117,10 +2157,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_deployment?: SurvosDeploymentConfig,
  *         inspector?: InspectorConfig,
  *         survos_media?: SurvosMediaConfig,
- *         museado_data?: MuseadoDataConfig,
  *         ux_translator?: UxTranslatorConfig,
  *         survos_kit?: SurvosKitConfig,
  *         survos_field?: SurvosFieldConfig,
+ *         survos_fetch?: SurvosFetchConfig,
+ *         survos_imgproxy?: SurvosImgproxyConfig,
+ *         survos_iiif?: SurvosIiifConfig,
+ *         survos_js_twig?: SurvosJsTwigConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -2136,6 +2179,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         survos_import?: SurvosImportConfig,
+ *         survos_jsonl?: SurvosJsonlConfig,
  *         survos_meili?: SurvosMeiliConfig,
  *         twig_component?: TwigComponentConfig,
  *         survos_ez?: SurvosEzConfig,
@@ -2147,10 +2191,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         api_platform?: ApiPlatformConfig,
  *         inspector?: InspectorConfig,
  *         survos_media?: SurvosMediaConfig,
- *         museado_data?: MuseadoDataConfig,
  *         ux_translator?: UxTranslatorConfig,
  *         survos_kit?: SurvosKitConfig,
  *         survos_field?: SurvosFieldConfig,
+ *         survos_fetch?: SurvosFetchConfig,
+ *         survos_imgproxy?: SurvosImgproxyConfig,
+ *         survos_iiif?: SurvosIiifConfig,
+ *         survos_js_twig?: SurvosJsTwigConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -2167,6 +2214,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         survos_import?: SurvosImportConfig,
+ *         survos_jsonl?: SurvosJsonlConfig,
  *         survos_meili?: SurvosMeiliConfig,
  *         survos_code?: SurvosCodeConfig,
  *         twig_component?: TwigComponentConfig,
@@ -2180,10 +2228,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_deployment?: SurvosDeploymentConfig,
  *         inspector?: InspectorConfig,
  *         survos_media?: SurvosMediaConfig,
- *         museado_data?: MuseadoDataConfig,
  *         ux_translator?: UxTranslatorConfig,
  *         survos_kit?: SurvosKitConfig,
  *         survos_field?: SurvosFieldConfig,
+ *         survos_fetch?: SurvosFetchConfig,
+ *         survos_imgproxy?: SurvosImgproxyConfig,
+ *         survos_iiif?: SurvosIiifConfig,
+ *         survos_js_twig?: SurvosJsTwigConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

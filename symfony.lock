@@ -73,9 +73,6 @@
             "config/packages/inspector.yaml"
         ]
     },
-    "museado/data-bundle": {
-        "version": "1.0.0"
-    },
     "nelmio/cors-bundle": {
         "version": "2.6",
         "recipe": {
@@ -136,11 +133,23 @@
     "survos/ez-bundle": {
         "version": "2.0.77"
     },
+    "survos/fetch-bundle": {
+        "version": "2.34.29"
+    },
     "survos/field-bundle": {
         "version": "2.24.37"
     },
+    "survos/iiif-bundle": {
+        "version": "2.33.0"
+    },
+    "survos/imgproxy-bundle": {
+        "version": "2.34.10"
+    },
     "survos/import-bundle": {
         "version": "2.0.77"
+    },
+    "survos/js-twig-bundle": {
+        "version": "2.34.38"
     },
     "survos/jsonl-bundle": {
         "version": "2.0.77"
