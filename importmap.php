@@ -43,7 +43,6 @@ return [
     'ms' => ['version' => '2.1.3'],
     'stimulus-attributes' => ['version' => '1.0.2'],
     'escape-html' => ['version' => '1.0.3'],
-    'fos-routing' => ['version' => '0.0.6'],
     'instantsearch.js' => ['version' => '4.117.0'],
     '@algolia/events' => ['version' => '4.0.1'],
     'algoliasearch-helper' => ['version' => '3.29.3'],
