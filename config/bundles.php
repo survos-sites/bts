@@ -23,7 +23,6 @@ return [
     Survos\BabelBundle\SurvosBabelBundle::class => ['all' => true],
     Symfony\UX\Icons\UXIconsBundle::class => ['all' => true],
     Survos\LinguaBundle\SurvosLinguaBundle::class => ['all' => true],
-    Survos\StateBundle\SurvosStateBundle::class => ['all' => true],
     Survos\TranslatorBundle\SurvosTranslatorBundle::class => ['all' => true],
     Nelmio\CorsBundle\NelmioCorsBundle::class => ['all' => true],
     ApiPlatform\Symfony\Bundle\ApiPlatformBundle::class => ['all' => true],

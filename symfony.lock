@@ -182,9 +182,6 @@
     "survos/menu-bundle": {
         "version": "2.42.7"
     },
-    "survos/state-bundle": {
-        "version": "2.0.77"
-    },
     "survos/translator-bundle": {
         "version": "2.0.80"
     },

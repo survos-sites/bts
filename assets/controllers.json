@@ -58,12 +58,6 @@
                 }
             }
         },
-        "@survos/state-bundle": {
-            "workflow": {
-                "enabled": true,
-                "fetch": "eager"
-            }
-        },
         "@survos/workflow-extras-bundle": {
             "workflow": {
                 "enabled": true,

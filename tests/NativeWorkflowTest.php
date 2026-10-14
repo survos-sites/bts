@@ -14,6 +14,8 @@ final class NativeWorkflowTest extends KernelTestCase
     public function testNativeWorkflowAppliesToExistingMarking(): void
     {
         self::bootKernel();
+        self::assertArrayNotHasKey('SurvosStateBundle', self::$kernel->getBundles());
+        self::assertArrayHasKey('SurvosMenuBundle', self::$kernel->getBundles());
         $subject = new Amst();
         $workflow = self::getContainer()->get(Registry::class)->get($subject, AmstWFDefinition::WORKFLOW_NAME);
         self::assertSame('new', $subject->marking);
