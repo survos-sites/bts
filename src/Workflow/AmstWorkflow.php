@@ -4,13 +4,11 @@ namespace App\Workflow;
 
 use App\Entity\Amst;
 use App\Workflow\AmstWFDefinition as WF;
-use Survos\StateBundle\Attribute\Workflow;
 use Symfony\Component\Workflow\Attribute\AsGuardListener;
 use Symfony\Component\Workflow\Attribute\AsTransitionListener;
 use Symfony\Component\Workflow\Event\GuardEvent;
 use Symfony\Component\Workflow\Event\TransitionEvent;
 
-//#[Workflow(supports: [Amst::class], name: WF::WORKFLOW_NAME)]
 class AmstWorkflow
 {
 	public const WORKFLOW_NAME = 'AmstWorkflow';

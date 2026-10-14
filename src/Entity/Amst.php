@@ -19,8 +19,7 @@ use Survos\BabelBundle\Attribute\BabelStorage;
 use Survos\BabelBundle\Contract\BabelHooksInterface;
 use Survos\BabelBundle\Entity\Traits\BabelHooksTrait;
 use Survos\MeiliBundle\Metadata\MeiliIndex;
-use Survos\StateBundle\Traits\MarkingInterface;
-use Survos\StateBundle\Traits\MarkingTrait;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 
 use Survos\Lingua\Contracts\Attribute\Translatable;
@@ -45,9 +44,20 @@ use Survos\BabelBundle\Attribute\BabelLocale;
         new GetCollection()
     ]
 )]
-final class Amst implements MarkingInterface, BabelHooksInterface
+final class Amst implements BabelHooksInterface
 {
-    use MarkingTrait;
+    #[Column(type: 'string', length: 32, nullable: true)]
+    #[Groups(['transition', 'minimum', 'marking', 'searchable'])]
+    public ?string $marking = null;
+
+    public function getMarking(): ?string { return $this->marking; }
+
+    public function setMarking(?string $marking, array $context = []): self
+    {
+        $this->marking = $marking;
+        return $this;
+    }
+
     use BabelHooksTrait;
 
     public function __construct()

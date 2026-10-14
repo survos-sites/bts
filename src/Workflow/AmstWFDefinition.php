@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Workflow;
 
 use App\Entity\Amst;
-use Survos\StateBundle\Attribute\Place;
-use Survos\StateBundle\Attribute\Transition;
+use Survos\WorkflowExtrasBundle\Attribute\Place;
+use Survos\WorkflowExtrasBundle\Attribute\Transition;
 
-#[\Survos\StateBundle\Attribute\Workflow(supports: [Amst::class], name: self::WORKFLOW_NAME)]
+#[\Survos\WorkflowExtrasBundle\Attribute\AsWorkflow(supports: [Amst::class], name: self::WORKFLOW_NAME)]
 class AmstWFDefinition
 {
 	public const WORKFLOW_NAME = 'AmstWorkflow';

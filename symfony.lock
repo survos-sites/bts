@@ -73,6 +73,9 @@
             "config/packages/inspector.yaml"
         ]
     },
+    "knplabs/knp-menu-bundle": {
+        "version": "v3.8.0"
+    },
     "nelmio/cors-bundle": {
         "version": "2.6",
         "recipe": {
@@ -176,11 +179,20 @@
             "config/routes/survos_meili.yaml"
         ]
     },
+    "survos/menu-bundle": {
+        "version": "2.42.7"
+    },
     "survos/state-bundle": {
         "version": "2.0.77"
     },
     "survos/translator-bundle": {
         "version": "2.0.80"
+    },
+    "survos/workflow-extras-bundle": {
+        "version": "2.42.8"
+    },
+    "survos/workflow-messenger-bundle": {
+        "version": "2.42.9"
     },
     "symfony/asset-mapper": {
         "version": "7.4",
