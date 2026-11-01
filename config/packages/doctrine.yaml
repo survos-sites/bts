@@ -1,6 +1,8 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
+        driver_schemes:
+            duckdb: App\Doctrine\BtsDuckDbDriver
         schema_filter: '~^(?!(?:_timescaledb_|timescaledb_|toolkit_))~'
 
         # IMPORTANT: You MUST configure your server version,
@@ -13,6 +15,7 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         identity_generation_preferences:
             Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
+            App\Doctrine\BtsDuckDbPlatform: sequence
         mappings:
             App:
                 type: attribute
@@ -26,7 +29,7 @@ when@test:
     doctrine:
         dbal:
             # "TEST_TOKEN" is typically set by ParaTest
-            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+            dbname_suffix: ''
 
 when@prod:
     doctrine:

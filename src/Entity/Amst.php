@@ -18,7 +18,6 @@ use Doctrine\ORM\Mapping\Id;
 use Survos\BabelBundle\Attribute\BabelStorage;
 use Survos\BabelBundle\Contract\BabelHooksInterface;
 use Survos\BabelBundle\Entity\Traits\BabelHooksTrait;
-use Survos\MeiliBundle\Metadata\MeiliIndex;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 
@@ -29,13 +28,6 @@ use Survos\BabelBundle\Attribute\BabelLocale;
  * @profile data/amst_en.profile.json
  */
 #[Entity(repositoryClass: AmstRepository::class)]
-#[MeiliIndex(
-    ui: ['icon' => 'Amst'],
-	primaryKey: 'code',
-	filterable: self::FILTERABLE_FIELDS,
-	sortable: self::SORTABLE_FIELDS,
-	searchable: self::SEARCHABLE_FIELDS,
-)]
 #[BabelStorage()]
 #[BabelLocale(locale: 'nl')]
 #[ApiResource(

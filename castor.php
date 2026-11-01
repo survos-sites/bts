@@ -1,9 +1,8 @@
 <?php
 
 use Castor\Attribute\AsTask;
-use Survos\CoreBundle\Service\SurvosUtils;
 use Survos\JsonlBundle\IO\JsonlReader;
-use Survos\MeiliBundle\Model\Dataset;
+use App\Import\DatasetSource;
 
 use function Castor\{io, run, capture, import, http_download};
 $autoloadCandidates = [
@@ -33,15 +32,16 @@ const APP_NAMESPACE='app';
 /**
  * Return the available demo datasets, keyed by code.
  *
- * @return array<string, Dataset>
+ * @return array<string, DatasetSource>
  */
 function demo_datasets(): array
 {
         $datasets = [
-            new Dataset(
+            new DatasetSource(
                 name: 'amst',
                 url: 'https://statics.belowthesurface.amsterdam/downloadbare-datasets/Downloadtabel_NL.csv',
                 target: 'data/amst.csv',
+                jsonl: 'data/amst.jsonl',
             ),
         ];
     foreach ($datasets as $dataset) {
@@ -188,7 +188,7 @@ function load_database(
     #[AsOption(description: "reset the database")] bool $reset = false
 ): void {
     $code = 'amst';
-    /** @var array<string, Dataset> $map */
+    /** @var array<string, DatasetSource> $map */
     $map = demo_datasets();
     $dataset = $map[$code];
 
@@ -197,18 +197,17 @@ function load_database(
         return;
     }
     if (!file_exists($dataset->jsonl)) {
-        $cmd = 'bin/console import:convert --no-debug %s --dataset=%s';
+        $cmd = 'bin/console import:convert --no-debug %s --dataset=%s --output=%s';
         $convertCmd = sprintf(
             $cmd,
-            $dataset->target,
-            $dataset->name
+            escapeshellarg($dataset->target),
+            escapeshellarg($dataset->name),
+            escapeshellarg($dataset->jsonl)
         );
         io()->writeln($convertCmd);
         run($convertCmd);
     }
 
-    // create the indices so load will populate them
-    run('bin/console meili:settings:update --force');
 
     // 4) Import entities into Doctrine.
     //
@@ -216,9 +215,6 @@ function load_database(
     // and that you've already generated the entity via code:entity.
     $limitArg = $limit ? sprintf(' --limit=%d', $limit) : '';
     $cmd = 'bin/console import:entities %s %s%s';
-    if ($limit) {
-        $cmd .= ' --limit ' . $limit;
-    }
     if ($reset) {
         $cmd .= ' --reset';
     }

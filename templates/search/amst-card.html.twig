@@ -1,11 +1,21 @@
-<article class="card h-100">
-    {% if hit.image %}<img src="{{ hit.image }}" alt="{{ (hit.getResolvedTranslation('object') ?? hit.getBackingValue('object')) }}" class="card-img-top" loading="lazy" style="height: 180px; object-fit: contain">{% endif %}
+{% set label = hit.getResolvedTranslation('object') ?? hit.getBackingValue('object') %}
+{% set rawId = 'record-json-' ~ hit.code %}
+<article class="card h-100 position-relative">
+    <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-2 z-1" popovertarget="{{ rawId }}" title="{{ 'catalog.raw_json'|trans }}" aria-label="{{ 'catalog.raw_json'|trans }} · {{ hit.code }}">{}</button>
+    <div id="{{ rawId }}" popover class="bts-record-json">
+        <andypf-json-viewer expanded="1" indent="2" show-data-types="false" show-toolbar="true" show-size="true" show-copy="true" theme="monokai" data="{{ hit|sparse_json|e('html_attr') }}"></andypf-json-viewer>
+    </div>
+    {% if hit.image %}
+        {% if hit.citationUrl %}<a href="{{ hit.citationUrl }}" rel="external">{% endif %}
+        <img src="{{ hit.image }}" alt="{{ label }}" class="card-img-top" loading="lazy" style="height: 180px; object-fit: contain">
+        {% if hit.citationUrl %}</a>{% endif %}
+    {% endif %}
     <div class="card-body">
         <div class="text-secondary small">{{ hit.code }}</div>
-        <h2 class="h3">{{ (hit.getResolvedTranslation('object') ?? hit.getBackingValue('object')) }}</h2>
-        <p>{{ (hit.getResolvedTranslation('subcategorie') ?? hit.getBackingValue('subcategorie')) }}</p>
+        <h2 class="h3">{% if hit.citationUrl %}<a href="{{ hit.citationUrl }}" class="text-reset" rel="external">{{ label }}</a>{% else %}{{ label }}{% endif %}</h2>
+        <p>{{ hit.getResolvedTranslation('subcategorie') ?? hit.getBackingValue('subcategorie') }}</p>
         <span class="badge bg-blue-lt">{{ hit.categorie }}</span>
         <span class="badge bg-secondary-lt">{{ hit.projectCode }}</span>
     </div>
-    <div class="card-footer"><a href="{{ path('_api_/amsts/{code}{._format}_get', {code: hit.code, _format: 'jsonld'}) }}">{{ 'catalog.view'|trans }}</a></div>
+    {% if hit.citationUrl %}<div class="card-footer"><a href="{{ hit.citationUrl }}" rel="external">{{ 'catalog.source'|trans }} ↗</a></div>{% endif %}
 </article>

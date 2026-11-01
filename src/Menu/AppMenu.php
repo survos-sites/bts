@@ -48,6 +48,6 @@ final class AppMenu
     #[AsMenuListener(MenuSlot::ADMIN_NAVBAR_MENU)]
     public function administration(MenuEvent $event): void
     {
-        $this->add($event->getMenu(), 'meili_admin', ['_locale' => $this->localeSwitcher->getLocale()], label: 'meili_admin', icon: 'tabler:edit', translationDomain: 'routing');
+        $this->add($event->getMenu(), 'app_admin', ['_locale' => $this->localeSwitcher->getLocale()], label: 'app_admin', icon: 'tabler:edit', translationDomain: 'routing');
     }
 }

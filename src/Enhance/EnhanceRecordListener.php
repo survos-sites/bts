@@ -3,7 +3,6 @@
 namespace App\Enhance;
 
 use Sentry\HttpClient\HttpClient;
-use Survos\CoreBundle\Service\SurvosUtils;
 use Survos\ImportBundle\Event\ImportConvertFinishedEvent;
 use Survos\JsonlBundle\Event\JsonlConvertStartedEvent;
 use Survos\JsonlBundle\Event\JsonlRecordEvent;
@@ -35,7 +34,7 @@ class EnhanceRecordListener
     final public function tweakRecord(ImportConvertRowEvent $event): void
     {
         $record = $event->row;
-        $record = SurvosUtils::removeNullsAndEmptyArrays($record);
+        $record = array_filter($record, static fn (mixed $value): bool => null !== $value && [] !== $value);
 //        foreach ($event->tags as $tag)
         {
             switch ($event->dataset) {
@@ -47,6 +46,10 @@ class EnhanceRecordListener
 //                    https://statics.belowthesurface.amsterdam/vondst/600/NZC1.00001MTL001(01).png
 //                    https://statics.belowthesurface.amsterdam/vondst/600/NZD1.00048FAU017-02(01).png
                     $code = $record['vondstnummer']; // with the .
+                    if (!$record['website']) {
+                        $event->row = null;
+                        return;
+                    }
                     // The source CSV includes finds that have no public detail page or image.
                     unset($record['citation_url'], $record['image']);
                     if ($record['website']) {

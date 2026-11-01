@@ -1,39 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
+use App\Entity\Amst;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Survos\EzBundle\Controller\BaseCrudController;
 
-class AmstCrudController extends BaseCrudController
+final class AmstCrudController extends AbstractCrudController
 {
-    public function configureFields(string $pageName): iterable
-    {
-        yield TextField::new('object', 'object.label');
-        yield TextField::new('vondstnummer', 'vondstnummer.label');
-        yield TextField::new('subcategorie', label: 'subcategorie.label');
-//        yield TextField::new('niveau1');
-//        yield TextField::new('niveau2');
-//        yield TextField::new('niveau3');
-//        yield TextField::new('niveau4');
-        foreach (parent::configureFields($pageName) as $field) {
-            $dto = $field->getAsDto();
-            // avoid dups!
-            if (in_array($dto->getProperty(), ['object','vondstnummer','subcategorie'])) {
-                continue;
-            }
-            $field->setLabel($dto->getProperty() . '.label');
-            $field->setHelp($dto->getProperty() . '.description');
-            yield $field;
-        }
-
-    }
-
     public static function getEntityFqcn(): string
     {
-        return \App\Entity\Amst::class;
+        return Amst::class;
     }
 
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud->setSearchFields(['code', 'vondstnummer', 'objectBacking']);
+    }
 
+    public function configureFields(string $pageName): iterable
+    {
+        yield TextField::new('code', 'code.label')->setFormTypeOption('disabled', Crud::PAGE_EDIT === $pageName);
+        yield TextField::new('vondstnummer', 'vondstnummer.label');
+        yield TextField::new('object', 'object.label');
+        yield TextField::new('subcategorie', 'subcategorie.label');
+        yield TextField::new('projectCode', 'projectCode.label');
+        yield TextField::new('categorie', 'categorie.label');
+        yield IntegerField::new('website')->hideOnIndex();
+    }
 }

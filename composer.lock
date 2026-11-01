@@ -4,62 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfd2fab62bd03242110df20b8f4547b7",
+    "content-hash": "3ca6aee7300595b67f91e9975981b19b",
     "packages": [
-        {
-            "name": "adbario/php-dot-notation",
-            "version": "3.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/adbario/php-dot-notation.git",
-                "reference": "aa09db5a7a365a8d2d8dd7edfa3cd501d1a8acb0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/adbario/php-dot-notation/zipball/aa09db5a7a365a8d2d8dd7edfa3cd501d1a8acb0",
-                "reference": "aa09db5a7a365a8d2d8dd7edfa3cd501d1a8acb0",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^7.4 || ^8.0"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^2.1",
-                "phpunit/phpunit": "^9.5",
-                "squizlabs/php_codesniffer": "^3.7"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
-                "psr-4": {
-                    "Adbar\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Riku Särkinen",
-                    "email": "riku@adbar.io"
-                }
-            ],
-            "description": "PHP dot notation access to arrays",
-            "homepage": "https://github.com/adbario/php-dot-notation",
-            "keywords": [
-                "ArrayAccess",
-                "dotnotation"
-            ],
-            "support": {
-                "issues": "https://github.com/adbario/php-dot-notation/issues",
-                "source": "https://github.com/adbario/php-dot-notation/tree/3.5.0"
-            },
-            "time": "2026-04-04T04:29:49+00:00"
-        },
         {
             "name": "api-platform/doctrine-common",
             "version": "v5.0.5",
@@ -3380,88 +3326,6 @@
             "time": "2026-10-26T09:55:31+00:00"
         },
         {
-            "name": "meilisearch/meilisearch-php",
-            "version": "v2.0.0-beta.8",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/meilisearch/meilisearch-php.git",
-                "reference": "88d7d634143dff3cbef4969af519b5bbcd96e7f3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/meilisearch/meilisearch-php/zipball/88d7d634143dff3cbef4969af519b5bbcd96e7f3",
-                "reference": "88d7d634143dff3cbef4969af519b5bbcd96e7f3",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^8.1",
-                "php-http/discovery": "^1.19",
-                "psr/http-client": "^1.0",
-                "symfony/polyfill-php81": "^1.33"
-            },
-            "require-dev": {
-                "http-interop/http-factory-guzzle": "^1.2.0",
-                "php-cs-fixer/shim": "^3.59.3",
-                "phpstan/phpstan": "^2.0",
-                "phpstan/phpstan-deprecation-rules": "^2.0",
-                "phpstan/phpstan-phpunit": "^2.0",
-                "phpstan/phpstan-strict-rules": "^2.0",
-                "phpunit/phpunit": "^10.5",
-                "symfony/http-client": "^5.4|^6.0|^7.0|^8.0"
-            },
-            "suggest": {
-                "guzzlehttp/guzzle": "Use Guzzle ^7 as HTTP client",
-                "http-interop/http-factory-guzzle": "Factory for guzzlehttp/guzzle",
-                "symfony/http-client": "Use Symfony Http client"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "src/functions.php"
-                ],
-                "psr-4": {
-                    "Meilisearch\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Clémentine Urquizar",
-                    "email": "clementine@meilisearch.com"
-                },
-                {
-                    "name": "Bruno Casali",
-                    "email": "bruno@meilisearch.com"
-                },
-                {
-                    "name": "Laurent Cazanove",
-                    "email": "lau.cazanove@gmail.com"
-                },
-                {
-                    "name": "Tomas Norkūnas",
-                    "email": "norkunas.tom@gmail.com"
-                }
-            ],
-            "description": "PHP wrapper for the Meilisearch API",
-            "keywords": [
-                "api",
-                "client",
-                "instant",
-                "meilisearch",
-                "php",
-                "search"
-            ],
-            "support": {
-                "issues": "https://github.com/meilisearch/meilisearch-php/issues",
-                "source": "https://github.com/meilisearch/meilisearch-php/tree/v2.0.0-beta.8"
-            },
-            "time": "2026-10-07T08:52:11+00:00"
-        },
-        {
             "name": "monolog/monolog",
             "version": "3.12.1",
             "source": {
@@ -3708,85 +3572,6 @@
                 }
             ],
             "time": "2024-09-09T07:06:30+00:00"
-        },
-        {
-            "name": "php-http/discovery",
-            "version": "1.20.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-http/discovery.git",
-                "reference": "82fe4c73ef3363caed49ff8dd1539ba06044910d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/82fe4c73ef3363caed49ff8dd1539ba06044910d",
-                "reference": "82fe4c73ef3363caed49ff8dd1539ba06044910d",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1.0|^2.0",
-                "php": "^7.1 || ^8.0"
-            },
-            "conflict": {
-                "nyholm/psr7": "<1.0",
-                "zendframework/zend-diactoros": "*"
-            },
-            "provide": {
-                "php-http/async-client-implementation": "*",
-                "php-http/client-implementation": "*",
-                "psr/http-client-implementation": "*",
-                "psr/http-factory-implementation": "*",
-                "psr/http-message-implementation": "*"
-            },
-            "require-dev": {
-                "composer/composer": "^1.0.2|^2.0",
-                "graham-campbell/phpspec-skip-example-extension": "^5.0",
-                "php-http/httplug": "^1.0 || ^2.0",
-                "php-http/message-factory": "^1.0",
-                "phpspec/phpspec": "^5.1 || ^6.1 || ^7.3",
-                "sebastian/comparator": "^3.0.5 || ^4.0.8",
-                "symfony/phpunit-bridge": "^6.4.4 || ^7.0.1"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "Http\\Discovery\\Composer\\Plugin",
-                "plugin-optional": true
-            },
-            "autoload": {
-                "psr-4": {
-                    "Http\\Discovery\\": "src/"
-                },
-                "exclude-from-classmap": [
-                    "src/Composer/Plugin.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Márk Sági-Kazár",
-                    "email": "mark.sagikazar@gmail.com"
-                }
-            ],
-            "description": "Finds and installs PSR-7, PSR-17, PSR-18 and HTTPlug implementations",
-            "homepage": "http://php-http.org",
-            "keywords": [
-                "adapter",
-                "client",
-                "discovery",
-                "factory",
-                "http",
-                "message",
-                "psr17",
-                "psr7"
-            ],
-            "support": {
-                "issues": "https://github.com/php-http/discovery/issues",
-                "source": "https://github.com/php-http/discovery/tree/1.20.0"
-            },
-            "time": "2024-10-02T11:20:13+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -4217,58 +4002,6 @@
             "time": "2019-01-08T18:20:26+00:00"
         },
         {
-            "name": "psr/http-client",
-            "version": "1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/php-fig/http-client.git",
-                "reference": "bb5906edc1c324c9a05aa0873d40117941e5fa90"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-client/zipball/bb5906edc1c324c9a05aa0873d40117941e5fa90",
-                "reference": "bb5906edc1c324c9a05aa0873d40117941e5fa90",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.0 || ^8.0",
-                "psr/http-message": "^1.0 || ^2.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Psr\\Http\\Client\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PHP-FIG",
-                    "homepage": "https://www.php-fig.org/"
-                }
-            ],
-            "description": "Common interface for HTTP clients",
-            "homepage": "https://github.com/php-fig/http-client",
-            "keywords": [
-                "http",
-                "http-client",
-                "psr",
-                "psr-18"
-            ],
-            "support": {
-                "source": "https://github.com/php-fig/http-client"
-            },
-            "time": "2023-09-23T14:17:50+00:00"
-        },
-        {
             "name": "psr/http-factory",
             "version": "1.1.0",
             "source": {
@@ -4674,57 +4407,59 @@
             "time": "2026-11-01T10:58:43+00:00"
         },
         {
-            "name": "survos/ez-bundle",
-            "version": "2.41.9",
+            "name": "survos/duckdb-bundle",
+            "version": "2.45.19",
             "source": {
                 "type": "git",
-                "url": "https://github.com/survos/ez-bundle.git",
-                "reference": "cded9c8c64311bc4308c6588ed5bba81bd2073c5"
+                "url": "https://github.com/survos/duckdb-bundle.git",
+                "reference": "e5844ef9400372f6660f84bed8bb1b7877f3ff1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/ez-bundle/zipball/cded9c8c64311bc4308c6588ed5bba81bd2073c5",
-                "reference": "cded9c8c64311bc4308c6588ed5bba81bd2073c5",
+                "url": "https://api.github.com/repos/survos/duckdb-bundle/zipball/e5844ef9400372f6660f84bed8bb1b7877f3ff1f",
+                "reference": "e5844ef9400372f6660f84bed8bb1b7877f3ff1f",
                 "shasum": ""
             },
             "require": {
-                "easycorp/easyadmin-bundle": "^4.25|^5.0",
+                "ext-pdo": "*",
+                "ext-pdo_duckdb": "*",
                 "php": "^8.5",
-                "symfony/config": "^7.4||^8.1",
-                "symfony/console": "^7.4||^8.1",
-                "symfony/dependency-injection": "^7.4||^8.1",
-                "symfony/framework-bundle": "^7.4||^8.1",
-                "symfony/http-kernel": "^7.4||^8.1"
+                "survos/kit-bundle": "^2.36",
+                "symfony/framework-bundle": "^8.1"
             },
             "require-dev": {
-                "nette/php-generator": "^4.2",
-                "phpstan/phpstan-symfony": "^2.0",
-                "symfony/phpunit-bridge": "^7.4||^8.1"
+                "doctrine/dbal": "^4.4",
+                "phpunit/phpunit": "^13.0",
+                "symfony/console": "^8.1",
+                "symfony/stopwatch": "^8.1",
+                "symfony/twig-bundle": "^8.1",
+                "symfony/web-profiler-bundle": "^8.1",
+                "thomas-0816/doctrine-dbal-duckdb": "^1.3"
+            },
+            "suggest": {
+                "doctrine/dbal": "Automatically profile DuckDB Doctrine queries when the middleware integration is available.",
+                "symfony/web-profiler-bundle": "Render the DuckDB toolbar and profile panel in debug applications."
             },
             "type": "symfony-bundle",
             "autoload": {
                 "psr-4": {
-                    "Survos\\EzBundle\\": "src/"
+                    "Survos\\DuckDbBundle\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "authors": [
-                {
-                    "name": "Tac Tacelosky",
-                    "email": "tacman@gmail.com"
-                }
-            ],
-            "description": "configure EasyAdmin with attributes",
+            "description": "Read-only DuckDB PDO connections and explicit named local or S3 sources for Symfony.",
             "keywords": [
-                "symfony",
-                "symfony-ux"
+                "duckdb",
+                "pdo",
+                "s3",
+                "symfony"
             ],
             "support": {
-                "issues": "https://github.com/survos/ez-bundle/issues",
-                "source": "https://github.com/survos/ez-bundle/tree/2.41.9"
+                "issues": "https://github.com/survos/duckdb-bundle/issues",
+                "source": "https://github.com/survos/duckdb-bundle/tree/2.45.19"
             },
             "funding": [
                 {
@@ -4732,7 +4467,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-13T13:09:50+00:00"
+            "time": "2026-11-01T13:17:32+00:00"
         },
         {
             "name": "survos/fetch-bundle",
@@ -5146,67 +4881,6 @@
             "time": "2026-10-26T12:26:06+00:00"
         },
         {
-            "name": "survos/js-twig-bundle",
-            "version": "2.43.21",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/js-twig-bundle.git",
-                "reference": "8d0a9b918d67f4fd33b8465e78a61069ab0c1952"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/js-twig-bundle/zipball/8d0a9b918d67f4fd33b8465e78a61069ab0c1952",
-                "reference": "8d0a9b918d67f4fd33b8465e78a61069ab0c1952",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.5",
-                "survos/kit-bundle": "^2.5",
-                "symfony/asset-mapper": "^7.4.20||^8.1.8",
-                "symfony/config": "^7.4||^8.1",
-                "symfony/dependency-injection": "^7.4||^8.1",
-                "symfony/dom-crawler": "^7.4||^8.1",
-                "symfony/http-kernel": "^7.4||^8.1",
-                "symfony/routing": "^7.4||^8.1",
-                "symfony/ux-router": "^3.6",
-                "symfony/ux-twig-component": "^3",
-                "twig/twig": "^3.4|^4.0"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^2.0",
-                "symfony/browser-kit": "^7.4||^8.1",
-                "symfony/framework-bundle": "^7.4||^8.1",
-                "symfony/phpunit-bridge": "^7.4||^8.1",
-                "symfony/twig-bundle": "^7.4||^8.1",
-                "symfony/var-dumper": "^7.4||^8.1"
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Survos\\JsTwigBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Render Twig blocks in the browser from Stimulus via twig-browser, with path(), stimulus_* and ux_icon helpers. Routes load as JSON through AssetMapper, no build step.",
-            "keywords": [
-                "symfony-ux"
-            ],
-            "support": {
-                "issues": "https://github.com/survos/js-twig-bundle/issues",
-                "source": "https://github.com/survos/js-twig-bundle/tree/2.43.21"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-10-26T13:32:38+00:00"
-        },
-        {
             "name": "survos/jsonl-bundle",
             "version": "2.43.20",
             "source": {
@@ -5579,100 +5253,6 @@
                 }
             ],
             "time": "2026-10-17T15:07:23+00:00"
-        },
-        {
-            "name": "survos/meili-bundle",
-            "version": "2.44.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/survos/meili-bundle.git",
-                "reference": "7e67bb1229f251731b4cb844ce0e72b01aa8fc68"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/survos/meili-bundle/zipball/7e67bb1229f251731b4cb844ce0e72b01aa8fc68",
-                "reference": "7e67bb1229f251731b4cb844ce0e72b01aa8fc68",
-                "shasum": ""
-            },
-            "require": {
-                "adbario/php-dot-notation": "^3.3",
-                "ext-pdo": "*",
-                "meilisearch/meilisearch-php": "^2.0@beta",
-                "nyholm/psr7": "^1.8",
-                "php": "^8.5",
-                "survos/data-contracts": "^2.32",
-                "survos/field-bundle": "^2.5",
-                "survos/js-twig-bundle": "^2.5",
-                "survos/jsonl-bundle": "^2.5",
-                "survos/kit-bundle": "^2.5",
-                "survos/lingua-core": "^2.5",
-                "symfony/config": "^8.1",
-                "symfony/console": "^8.1",
-                "symfony/dependency-injection": "^8.1",
-                "symfony/http-kernel": "^8.1",
-                "symfony/property-access": "^8.1",
-                "symfony/stopwatch": "^8.1",
-                "symfony/string": "^8.1",
-                "symfony/ux-router": "^3.6",
-                "twig/twig": "^3.4|^4.0",
-                "zenstruck/bytes": "^1.0"
-            },
-            "require-dev": {
-                "devizzent/cebe-php-openapi": "^1.1",
-                "doctrine/doctrine-bundle": "^3.0",
-                "easycorp/easyadmin-bundle": "^4.26|^5.0",
-                "liquid/liquid": "^1.4",
-                "phpstan/phpstan": "^2.0",
-                "rector/rector": "^2.0",
-                "survos/babel-bundle": "^2.5",
-                "survos/inspection-bundle": "^2.5",
-                "survos/tabler-bundle": "^2.5",
-                "symfony/browser-kit": "^8.1",
-                "symfony/framework-bundle": "^8.1",
-                "symfony/http-client": "^8.1",
-                "symfony/intl": "^8.1",
-                "symfony/mcp-bundle": "^1.0.0-beta1",
-                "symfony/messenger": "^8.1",
-                "symfony/phpunit-bridge": "^8.1",
-                "symfony/twig-bundle": "^8.1",
-                "symfony/ux-chartjs": "^3",
-                "symfony/ux-twig-component": "^3",
-                "symfony/var-dumper": "^8.1",
-                "twig/extra-bundle": "^3.22",
-                "twig/intl-extra": "^3.22",
-                "yethee/tiktoken": "^1.0"
-            },
-            "suggest": {
-                "api-platform/core": "Required for admin dashboard integration",
-                "api-platform/doctrine-orm": "Leverage doctrine in api-platform",
-                "symfony/ai-agent": "Required for exposing Meilisearch as Symfony AI agent tools and loading the bundle tool classes",
-                "symfony/mcp-bundle": "Expose Meilisearch tools over MCP."
-            },
-            "type": "symfony-bundle",
-            "autoload": {
-                "psr-4": {
-                    "Survos\\MeiliBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Utilities for managing a meilisearch indexes",
-            "keywords": [
-                "symfony-ux"
-            ],
-            "support": {
-                "issues": "https://github.com/survos/meili-bundle/issues",
-                "source": "https://github.com/survos/meili-bundle/tree/2.44.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                }
-            ],
-            "time": "2026-10-26T16:09:36+00:00"
         },
         {
             "name": "survos/menu-bundle",
@@ -7108,77 +6688,6 @@
                 }
             ],
             "time": "2026-11-01T07:27:13+00:00"
-        },
-        {
-            "name": "symfony/dom-crawler",
-            "version": "8.2.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "0bf3e73ed0d98abc2be097896a048cbc1518b98a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/0bf3e73ed0d98abc2be097896a048cbc1518b98a",
-                "reference": "0bf3e73ed0d98abc2be097896a048cbc1518b98a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.4.1",
-                "symfony/polyfill-ctype": "^1.8",
-                "symfony/polyfill-mbstring": "^1.0"
-            },
-            "require-dev": {
-                "symfony/css-selector": "^7.4|^8.0"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\DomCrawler\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Eases DOM navigation for HTML and XML documents",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/dom-crawler/tree/8.2"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/nicolas-grekas",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2026-10-28T08:03:22+00:00"
         },
         {
             "name": "symfony/dotenv",
@@ -13181,6 +12690,65 @@
             "time": "2026-10-27T14:56:05+00:00"
         },
         {
+            "name": "thomas-0816/doctrine-dbal-duckdb",
+            "version": "1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thomas-0816/doctrine-dbal-duckdb.git",
+                "reference": "6822f8ab42a901a1f876f4a3b31c61c905dfe694"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thomas-0816/doctrine-dbal-duckdb/zipball/6822f8ab42a901a1f876f4a3b31c61c905dfe694",
+                "reference": "6822f8ab42a901a1f876f4a3b31c61c905dfe694",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "^4.4",
+                "ext-pdo_duckdb": "*",
+                "php": ">= 8.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3",
+                "phpstan/phpstan": "*",
+                "phpunit/php-code-coverage": "^11 || ^12 || ^13 || ^14",
+                "phpunit/phpunit": "^11 || ^12 || ^13",
+                "symfony/var-dumper": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/PolyFills.php"
+                ],
+                "psr-4": {
+                    "DuckDb\\DBAL\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Bley"
+                }
+            ],
+            "description": "Doctrine DBAL for DuckDB, powered by the PHP PDO Driver for DuckDB",
+            "keywords": [
+                "analytics",
+                "database",
+                "dbal",
+                "doctrine",
+                "duckdb",
+                "pdo"
+            ],
+            "support": {
+                "issues": "https://github.com/thomas-0816/doctrine-dbal-duckdb/issues",
+                "source": "https://github.com/thomas-0816/doctrine-dbal-duckdb/tree/1.3"
+            },
+            "time": "2026-09-26T19:59:46+00:00"
+        },
+        {
             "name": "twig/extra-bundle",
             "version": "v3.29.0",
             "source": {
@@ -13701,69 +13269,6 @@
                 "source": "https://github.com/willdurand/Negotiation/tree/3.1.0"
             },
             "time": "2022-01-30T20:08:53+00:00"
-        },
-        {
-            "name": "zenstruck/bytes",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zenstruck/bytes.git",
-                "reference": "c1f173d65b2a4adf5d24af8c7aa8965e44ce029a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zenstruck/bytes/zipball/c1f173d65b2a4adf5d24af8c7aa8965e44ce029a",
-                "reference": "c1f173d65b2a4adf5d24af8c7aa8965e44ce029a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "require-dev": {
-                "phpstan/phpstan": "^2.0",
-                "phpunit/phpunit": "^9.6.0",
-                "symfony/phpunit-bridge": "^6.4|^7.0|^8.0",
-                "symfony/var-dumper": "^6.4|^7.0|^8.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Zenstruck\\": [
-                        "src/"
-                    ]
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kevin Bond",
-                    "email": "kevinbond@gmail.com"
-                }
-            ],
-            "description": "Parse, manipulate, humanize, and format bytes.",
-            "homepage": "https://github.com/zenstruck/bytes",
-            "keywords": [
-                "information",
-                "unit"
-            ],
-            "support": {
-                "issues": "https://github.com/zenstruck/bytes/issues",
-                "source": "https://github.com/zenstruck/bytes/tree/v1.1.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/kbond",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/nikophil",
-                    "type": "github"
-                }
-            ],
-            "time": "2025-12-07T03:43:30+00:00"
         }
     ],
     "packages-dev": [
@@ -16268,6 +15773,77 @@
             "time": "2026-06-05T06:23:12+00:00"
         },
         {
+            "name": "symfony/dom-crawler",
+            "version": "8.2.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/dom-crawler.git",
+                "reference": "0bf3e73ed0d98abc2be097896a048cbc1518b98a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/0bf3e73ed0d98abc2be097896a048cbc1518b98a",
+                "reference": "0bf3e73ed0d98abc2be097896a048cbc1518b98a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.4.1",
+                "symfony/polyfill-ctype": "^1.8",
+                "symfony/polyfill-mbstring": "^1.0"
+            },
+            "require-dev": {
+                "symfony/css-selector": "^7.4|^8.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\DomCrawler\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Eases DOM navigation for HTML and XML documents",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/dom-crawler/tree/8.2"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-10-28T08:03:22+00:00"
+        },
+        {
             "name": "symfony/maker-bundle",
             "version": "1.68.0",
             "source": {
@@ -16460,7 +16036,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "meilisearch/meilisearch-php": 10,
         "symfony/asset": 20,
         "symfony/asset-mapper": 20,
         "symfony/browser-kit": 20,
@@ -16500,6 +16075,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-pdo": "*",
+        "ext-pdo_duckdb": "*",
         "ext-pgsql": "*"
     },
     "platform-dev": {},

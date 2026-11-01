@@ -6,15 +6,13 @@ used by API Platform, SearchBundle and the administrative CRUD screens.
 
 ## Setup
 
-Requires PHP 8.5 with SQLite/PostgreSQL PDO drivers, Composer and Symfony CLI.
-Meilisearch is
-optional for the Doctrine-backed catalog search; it is needed for Meili indexing.
+Requires PHP 8.5, `ext-pdo_duckdb` with DuckDB 2.x, Composer and Symfony CLI.
+PDO SQLite is used only when copying the original local archive into DuckDB.
 
 ```bash
 composer install
 # Create .env.local with APP_SECRET and DATABASE_URL.
-# For an existing local SQLite archive:
-# DATABASE_URL="sqlite:///%kernel.project_dir%/var/data.db"
+# DATABASE_URL="duckdb://_/%kernel.project_dir%/var/duckdb/bts.duckdb"
 php bin/console cache:clear
 php bin/console assets:install public
 php bin/console importmap:install
@@ -45,32 +43,38 @@ and workflow experiments. The public API is GET-only:
 `castor.php` describes the existing pipeline. Download the Dutch/English source
 CSVs, align them into a translation dictionary, convert/profile the Dutch CSV,
 then import its JSONL through the existing entity mapping. Data files are ignored
-by Git. The checked-out local archive currently contains 27,500 finds; that is
-not a claim that the full upstream dataset has been imported.
+by Git. The original local archive contains 27,500 finds. The DuckDB catalog selects
+its 4,424 published finds. The full upstream CSV has 19,977 published finds out
+of 139,189 records; this local catalog is still a partial import.
 
 ```bash
 castor app:download
 castor app:dictionary
-php bin/console import:convert data/amst.csv --dataset=amst --no-debug
+php bin/console import:convert data/amst.csv --dataset=amst --output=data/amst.jsonl --no-debug
 php bin/console import:entities Amst data/amst.jsonl --limit=50
 ```
 
 Use `--help` before a full load; import options belong to the installed ImportBundle.
-The older `castor load` / `castor app:build` helpers also update Meili settings and
-run translation, so they require those services. They are not just database loads.
+`castor load` uses the local `DatasetSource` description and imports converted
+JSONL through Doctrine. It no longer configures a Meili index. `castor app:build`
+also attempts a schema update and runs translation; for DuckDB use the explicit
+fresh-schema steps below rather than the older schema-update helper.
 Both upstream CSVs were refetched on 2026-11-01 and matched the local files
 byte-for-byte (139,189 rows each). The `website` flag identifies published finds:
-the conversion listener generates source citations and image URLs only when it
-is set. Unpublished finds stay in the catalog with null citation/image fields.
+the existing conversion callback skips records where it is zero by setting the
+event row to null. Published records keep their source citations and image URLs.
+The archive-copy tool applies the same selection; the original archive is intact.
 The source CSV has no citation URL column; those URLs are generated locally.
 
 Do not regenerate `Amst` as part of an ordinary import: it contains translation
 property hooks and workflow integration.
 
-The current catalog search uses `doctrine://default` and needs no external search
-server or indexing step. Meili metadata and tooling remain installed for optional
-index experiments; `MEILI_SERVER`, `MEILI_API_KEY`, `MEILI_SEARCH_KEY` and
-`MEILI_PREFIX` configure that separate backend.
+The current catalog search uses `doctrine://default` against the local DuckDB
+connection and needs no external search server or indexing step. Meili, its PHP client, old dashboard and indexing hooks have been removed.
+Ordinary EasyAdmin remains for local edit testing. Result cards link to the
+original source when a citation exists. The `{}` button opens an andypf JSON
+viewer with null/empty values removed recursively, while preserving zero and
+false values.
 
 ## Translations
 
@@ -125,6 +129,68 @@ SearchBundle, replaces the empty EasyAdmin homepage, and retains `Amst` and its
 repository. The SQLite baseline was checked first: 27,500 finds, 526 keyword
 matches for `munt`, collection/item API responses, and the native workflow.
 
-DuckDB catalog experiments will follow this baseline release. The intended model
-is writable local builds and published read-only S3 snapshots, without changing
-`Amst` or its existing repository.
+## Local DuckDB experiment
+
+The `1.0` tag preserves the SQLite baseline. Branch `codex/duckdb-catalog` keeps
+`Amst`, its repository and the existing single Doctrine entity manager, and
+switches `DATABASE_URL` to a writable local DuckDB file. SearchBundle continues
+using its Doctrine adapter; Elasticsearch and Meilisearch are not used for
+catalog queries. Meili dependencies and integration have been removed in this branch.
+Vector search is a later stage of the DuckDB experiment.
+
+Install `ext-pdo_duckdb` with DuckDB 2.x before `composer install`; Composer does
+not install the native extension. The DBAL driver and DuckDB bundle are Composer
+dependencies. During development, link mono to include BabelBundle's DuckDB
+upsert support and the fix preventing blank provider stubs from hiding supplied
+English translations.
+
+To build a fresh local database from an existing archive:
+
+```bash
+mkdir -p var/duckdb
+DATABASE_URL='duckdb://_/%kernel.project_dir%/var/duckdb/bts.duckdb' php bin/console doctrine:schema:create
+DATABASE_URL='duckdb://_/%kernel.project_dir%/var/duckdb/bts.duckdb' php bin/duckdb-copy.php "$PWD/var/data.db"
+```
+
+Use a new target filename when rebuilding. The copy tool requires empty target
+tables, reads the archive in a read-only transaction, verifies row counts and
+advances sequences beyond imported IDs. New FetchBundle tables start empty;
+queued Messenger jobs are not duplicated. It checkpoints the finished DuckDB
+file. The application then uses DuckDB directly, including Babel's `str` and
+`str_tr` tables; SQLite is only the source archive for this conversion.
+
+```dotenv
+DATABASE_URL="duckdb://_/%kernel.project_dir%/var/duckdb/bts.duckdb"
+```
+
+A local `.env.local` override takes precedence over `.env`; update both when
+switching an existing checkout. The original archive remains in `var/data.db`.
+
+`src/Doctrine` contains the compatibility proven in the Symfony demo: Doctrine
+JSON uses VARCHAR to avoid double decoding PDO's native JSON values, generated
+IDs use sequences, and schema creation orders tables with inline foreign keys.
+Sequence IDs also have server defaults for Babel's direct DBAL inserts. DuckDB
+does not implement SQL cascade actions; ORM mappings stay intact, while the
+schema listener removes unsupported SQL actions. Raw SQL deletes remain
+restricted by foreign keys. General schema update/migration parity is not yet
+claimed; the repeatable path here is a fresh schema and archive copy.
+
+```bash
+php tests/Integration/duckdb-read-parity.php \
+  'sqlite:///%kernel.project_dir%/var/data.db' \
+  'duckdb://_/%kernel.project_dir%/var/duckdb/bts.duckdb'
+php tests/Integration/duckdb-edit-check.php
+```
+
+The read check compares API payloads, search cards, pagination and both locales
+against the published subset of the original SQLite archive.
+The edit check inserts, updates and deletes a temporary real Amst entity and
+verifies that English hydration survives each flush; it cleans up its record.
+Babel upserts may add missing provider stubs for the existing source strings.
+
+For deployment, a pinned FrankenPHP Docker image is the preferred packaging for
+PHP 8.5, `pdo_duckdb` and DuckDB extensions. PHP-FPM can also load the driver;
+FrankenPHP is a packaging choice, not an engine requirement. S3 publication and
+read-only runtime checks remain a separate next step; no fsn1 app is provisioned
+by this local experiment. x10's S3 endpoint is SeaweedFS on port 8333. WD-backed
+RustFS on port 9000 is never used.
