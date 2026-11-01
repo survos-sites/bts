@@ -47,7 +47,10 @@ class EnhanceRecordListener
 //                    https://statics.belowthesurface.amsterdam/vondst/600/NZC1.00001MTL001(01).png
 //                    https://statics.belowthesurface.amsterdam/vondst/600/NZD1.00048FAU017-02(01).png
                     $code = $record['vondstnummer']; // with the .
+                    // The source CSV includes finds that have no public detail page or image.
+                    unset($record['citation_url'], $record['image']);
                     if ($record['website']) {
+                        $record['citation_url'] = sprintf('https://belowthesurface.amsterdam/nl/vondst/%s', $code);
                         $image = $record['image'] = sprintf('https://statics.belowthesurface.amsterdam/vondst/600/%s(01).png',
                             $code);
                         $hash = hash('xxh3', $image);
@@ -69,7 +72,6 @@ class EnhanceRecordListener
                             $record[$var] = explode(';', $value);
                         }
                     }
-                    $record['citation_url'] = sprintf('https://belowthesurface.amsterdam/nl/vondst/%s', $code);
 //                    dd($record['citation_url']);
                     $code = str_replace('.', '-', $code);
                     if (in_array($code, $this->seen)) {
