@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'catalog.title'|trans }}{% endblock %}
+{% block page_title %}Below the Surface{% endblock %}
+{% block body %}
+    <div class="mb-4">
+        <a href="{{ path('app_homepage', {_locale: app.request.locale}) }}" class="d-inline-block mb-3">← {{ 'landing.about'|trans }}</a>
+        <p class="text-secondary">{{ 'catalog.intro'|trans }}</p>
+        <a href="{{ path('meili_admin', {_locale: app.request.locale}) }}" class="btn btn-outline-secondary">{{ 'catalog.manage'|trans }}</a>
+        <a href="{{ path('_api_/amsts{._format}_get_collection', {_format: 'jsonld'}) }}" class="btn btn-outline-secondary">{{ 'catalog.api'|trans }}</a>
+    </div>
+    <twig:Survos:Search:Layout name="amst" :urlRewriting="true" :initialQuery="{sort: 'o.code:asc'}" />
+{% endblock %}

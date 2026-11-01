@@ -28,8 +28,10 @@ php ../mono/link .
 ```
 
 The public homepage is `/{locale}/` (for example `/en/` or `/nl/`), using
-TablerBundle and SearchBundle. It provides keyword search, project/category
-facets, sorting and pagination. EasyAdmin remains at `/{locale}/admin` for edit
+TablerBundle. It explains the project, credits the source, and links to the
+original CSV downloads, documentation, reuse terms, code and related work.
+SearchBundle browsing is at `/{locale}/search`, with keyword search,
+project/category facets, sorting and pagination. EasyAdmin remains at `/{locale}/admin` for edit
 and workflow experiments. The public API is GET-only:
 
 - `/api/amsts.jsonld` — paginated collection.
@@ -54,6 +56,12 @@ php bin/console import:entities Amst data/amst.jsonl --limit=50
 Use `--help` before a full load; import options belong to the installed ImportBundle.
 The older `castor load` / `castor app:build` helpers also update Meili settings and
 run translation, so they require those services. They are not just database loads.
+Both upstream CSVs were refetched on 2026-11-01 and matched the local files
+byte-for-byte (139,189 rows each). The `website` flag identifies published finds:
+the conversion listener generates source citations and image URLs only when it
+is set. Unpublished finds stay in the catalog with null citation/image fields.
+The source CSV has no citation URL column; those URLs are generated locally.
+
 Do not regenerate `Amst` as part of an ordinary import: it contains translation
 property hooks and workflow integration.
 

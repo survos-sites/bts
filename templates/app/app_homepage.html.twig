@@ -1,12 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'catalog.title'|trans }}{% endblock %}
+{% block title %}{{ 'landing.title'|trans }}{% endblock %}
 {% block page_title %}Below the Surface{% endblock %}
 {% block body %}
-    <div class="mb-4">
-        <p class="text-secondary">{{ 'catalog.intro'|trans }}</p>
-        <a href="{{ path('meili_admin', {_locale: app.request.locale}) }}" class="btn btn-outline-secondary">{{ 'catalog.manage'|trans }}</a>
-        <a href="{{ path('_api_/amsts{._format}_get_collection', {_format: 'jsonld'}) }}" class="btn btn-outline-secondary">{{ 'catalog.api'|trans }}</a>
+    {% set sourceLocale = app.request.locale == 'nl' ? 'nl' : 'en' %}
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="card h-100">
+                <div class="card-body p-4 p-lg-5">
+                    <div class="subheader mb-3">{{ 'landing.eyebrow'|trans }}</div>
+                    <h1 class="display-5 mb-3">{{ 'landing.heading'|trans }}</h1>
+                    <p class="lead">{{ 'landing.story'|trans }}</p>
+                    <p class="text-secondary">{{ 'landing.application'|trans }}</p>
+                    <div class="d-flex flex-wrap gap-2 mt-4">
+                        <a href="{{ path('app_catalog_search', {_locale: app.request.locale}) }}" class="btn btn-primary btn-lg">{{ 'landing.explore'|trans }} →</a>
+                        <a href="https://belowthesurface.amsterdam/{{ sourceLocale }}" class="btn btn-outline-secondary btn-lg">{{ 'landing.original'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card h-100 bg-blue-lt">
+                <div class="card-body p-4 d-flex flex-column justify-content-center">
+                    <div class="display-4 fw-bold">{{ findCount|number_format(0, '.', ',') }}</div>
+                    <h2 class="h3 mt-2">{{ 'landing.available'|trans }}</h2>
+                    <p>{{ 'landing.coverage'|trans }}</p>
+                    <p class="mb-0 text-secondary">{{ 'landing.languages'|trans }}</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <twig:Survos:Search:Layout name="amst" :urlRewriting="true" :initialQuery="{sort: 'o.code:asc'}" />
+    <div class="row g-4">
+        <section class="col-lg-6" aria-labelledby="source-heading">
+            <div class="card h-100"><div class="card-body p-4">
+                <h2 id="source-heading" class="h2">{{ 'landing.sources'|trans }}</h2>
+                <p>{{ 'landing.source_credit'|trans }}</p>
+                <ul class="list-unstyled d-grid gap-3 mb-0">
+                    <li><a href="https://belowthesurface.amsterdam/{{ sourceLocale }}/pagina/publicaties-en-datasets">{{ 'landing.publications'|trans }} →</a></li>
+                    <li><a href="https://statics.belowthesurface.amsterdam/downloadbare-datasets/Downloadtabel_NL.csv">{{ 'landing.csv_nl'|trans }}</a> · <a href="https://statics.belowthesurface.amsterdam/downloadbare-datasets/Downloadtabel_EN.csv">{{ 'landing.csv_en'|trans }}</a><div class="small text-secondary">{{ 'landing.csv_note'|trans }}</div></li>
+                    <li><a href="https://statics.belowthesurface.amsterdam/downloadbare-datasets/Data_fields_description.xlsx">{{ 'landing.field_guide'|trans }}</a></li>
+                    <li><a href="https://assets.ctfassets.net/1g4p9jizfk7g/48971FwgogsoyQYqgMM8yo/f1f95cadab620b9232f767397d373d9f/Appendix_Stuff.pdf">{{ 'landing.code_guide'|trans }}</a></li>
+                </ul>
+            </div></div>
+        </section>
+        <section class="col-lg-6" aria-labelledby="tools-heading">
+            <div class="card h-100"><div class="card-body p-4">
+                <h2 id="tools-heading" class="h2">{{ 'landing.tools'|trans }}</h2>
+                <p>{{ 'landing.tools_intro'|trans }}</p>
+                <ul class="list-unstyled d-grid gap-3 mb-0">
+                    <li><a href="{{ path('_api_/amsts{._format}_get_collection', {_format: 'jsonld'}) }}">{{ 'landing.api'|trans }}</a> · <a href="{{ path('api_doc', {_format: 'html'}) }}">{{ 'landing.api_docs'|trans }}</a></li>
+                    <li><a href="https://github.com/survos-sites/BelowTheSurface">{{ 'landing.github'|trans }}</a></li>
+                    <li><a href="https://github.com/paulinevos/symfonycon-2025">{{ 'landing.related'|trans }}</a><div class="small text-secondary">{{ 'landing.related_note'|trans }}</div></li>
+                </ul>
+            </div></div>
+        </section>
+        <section class="col-12" aria-labelledby="credits-heading">
+            <div class="card"><div class="card-body p-4">
+                <h2 id="credits-heading" class="h3">{{ 'landing.credits'|trans }}</h2>
+                <p>{{ 'landing.attribution'|trans }}</p>
+                <p class="text-secondary">{{ 'landing.rights'|trans }}</p>
+                <a href="https://belowthesurface.amsterdam/{{ sourceLocale }}/pagina/disclaimer">{{ 'landing.terms'|trans }}</a>
+                <span class="mx-2">·</span><a href="https://belowthesurface.amsterdam/{{ sourceLocale }}/pagina/colofon-contact">{{ 'landing.colophon'|trans }}</a>
+            </div></div>
+        </section>
+    </div>
 {% endblock %}
