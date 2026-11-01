@@ -1,0 +1,16 @@
+go: Ga
+show_more: Meer tonen
+show_less: Minder tonen
+remove: Verwijderen
+reset_filters: Filters wissen
+results: '{0} 0 resultaten|{1} 1 resultaat|]1,Inf] %count% resultaten'
+no_result: Geen resultaten
+search:
+    placeholder: Zoek hier...
+pagination:
+    previous_page: Vorige pagina
+    next_page: Volgende pagina
+facet:
+    search: 'Zoek %facet%'
+    search_placeholder: Zoeken
+    no_search_results: Geen resultaten

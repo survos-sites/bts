@@ -283,6 +283,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         options?: array<string, mixed>,
  *         failure_transport?: scalar|Param|null, // Transport name to send failed messages to (after all retries have failed). // Default: null
  *         outbox?: scalar|Param|null, // Name or DSN of the transport that stores the messages inside the current database transaction; consume that transport to forward them to this one. A value that is not the name of a configured transport is a DSN, used to create the "orders.outbox" transport for an "orders" transport. // Default: null
+ *         inbox?: bool|array{ // Records the handled messages in a database table, in the transaction of their handlers, so that a redelivered message is not handled twice. Needs the "identity_stamps" option and a middleware that runs the handlers in a transaction.
+ *             enabled?: bool|Param, // Default: false
+ *             connection?: scalar|Param|null, // Name of the Doctrine DBAL connection of that transaction, the default connection when not set. // Default: null
+ *             table_name?: scalar|Param|null, // Default: "messenger_inbox"
+ *             retention?: int|Param, // Number of seconds a record is kept, which must exceed the time the transport can take to redeliver a message. // Default: 604800
+ *         },
  *         retry_strategy?: Param|string|array{
  *             service?: scalar|Param|null, // Service id to override the retry strategy entirely. // Default: null
  *             max_retries?: int|Param, // Default: 3
@@ -290,6 +296,15 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             multiplier?: float|Param, // If greater than 1, delay will grow exponentially for each retry: this delay = (delay * (multiple ^ retries)). // Default: 2
  *             max_delay?: int|Param, // Max time in ms that a retry should ever be delayed (0 = infinite). // Default: 0
  *             jitter?: float|Param, // Randomness to apply to the delay (between 0 and 1). // Default: 0.1
+ *         },
+ *         cooldown_strategy?: Param|bool|string|array{ // Stops consuming this transport for a while after its messages fail. With the default strategy, each worker counts its own failures.
+ *             enabled?: bool|Param, // Default: false
+ *             service?: scalar|Param|null, // Service id to override the cooldown strategy entirely. // Default: null
+ *             failure_threshold?: int|Param, // Number of failures in a row that start a cooldown. // Default: 5
+ *             delay?: int|Param, // Duration in ms of the first cooldown (or the initial value when multiplier is used). // Default: 1000
+ *             multiplier?: float|Param, // If greater than 1, the cooldown will grow exponentially for each further failure in a row: this delay = (delay * (multiplier ^ (failures - failure_threshold))). // Default: 2
+ *             max_delay?: int|Param, // Max duration in ms of a cooldown (0 = infinite). // Default: 60000
+ *             jitter?: float|Param, // Randomness to apply to the duration (between 0 and 1). // Default: 0.1
  *         },
  *         rate_limiter?: scalar|Param|null, // Rate limiter name to use when processing messages. // Default: null
  *         priority?: int|Param, // Order in which "messenger:consume --all" consumes this transport, higher comes first. // Default: 0
@@ -1055,7 +1070,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: bool|Param, // Default: false
  *     },
  *     string?: bool|array{
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *     },
  *     commonmark?: array{
  *         renderer?: array{ // Array of options for rendering HTML.
@@ -1153,7 +1168,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         access_denied_url?: scalar|Param|null,
  *         access_denied_handler?: scalar|Param|null,
  *         entry_point?: scalar|Param|null, // An enabled authenticator name or a service id that implements "Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface".
- *         re_authentication_entry_point?: scalar|Param|null, // An enabled authenticator name or a service id implementing "Symfony\Component\Security\Http\EntryPoint\ReAuthenticationEntryPointInterface", asking an already authenticated user to prove possession of their credentials again when IS_AUTHENTICATED_RECENTLY or IS_AUTHENTICATED_VERY_RECENTLY is denied. Defaults to the firewall entry point when that one implements it.
+ *         entry_point_path?: scalar|Param|null, // A path, an absolute URL or a route name to redirect anonymous users to when they need to authenticate.
+ *         re_authentication_entry_point?: scalar|Param|null, // An enabled authenticator name or a service id implementing "Symfony\Component\Security\Http\EntryPoint\ReAuthenticationEntryPointInterface", started when the vote denying access asks for a re-authentication. Defaults to the firewall entry point when it implements this interface.
  *         provider?: scalar|Param|null,
  *         stateless?: bool|Param, // Default: false
  *         lazy?: bool|Param, // Default: false
@@ -1241,8 +1257,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *             failure_path?: scalar|Param|null, // Default: null
  *             failure_forward?: bool|Param, // Default: false
  *             failure_path_parameter?: scalar|Param|null, // Default: "_failure_path"
- *             provider_uri?: scalar|Param|null, // The OIDC Issuer URL (e.g. "https://accounts.example.com"). Used for .well-known/openid-configuration discovery.
- *             http_client?: scalar|Param|null, // The id of the HttpClient service every call to the provider is made with: discovery, JWKS, token and UserInfo endpoints. Defaults to "http_client". A scoped client must scope every host the provider announces, not only the issuer. // Default: null
+ *             provider_uri?: scalar|Param|null, // The OIDC Issuer URL (e.g. "https://accounts.example.com"). Used for .well-known/openid-configuration discovery unless "discovery_uri" is set.
+ *             discovery_uri?: scalar|Param|null, // Absolute URL of the discovery document. The "issuer" it announces is still checked against "provider_uri". // Default: null
+ *             http_client?: scalar|Param|null, // The id of the HttpClient service every call to the provider is made with: discovery, JWKS, token and UserInfo endpoints. Defaults to "http_client". A scoped client must scope the discovery host and every host the provider announces. // Default: null
  *             client_id?: scalar|Param|null, // The OIDC client identifier.
  *             client_certificate?: Param|string|array{ // The TLS client certificate presented to the token and UserInfo endpoints.
  *                 certificate?: scalar|Param|null, // Path to the PEM file of the certificate.
@@ -1267,7 +1284,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                 },
  *                 tls_client_auth?: bool|Param, // Authenticate with "client_certificate", issued by a certificate authority.
  *                 self_signed_tls_client_auth?: bool|Param, // Authenticate with "client_certificate", self-signed.
- *                 id?: scalar|Param|null, // The id of a service implementing "ClientAuthenticationInterface", for a scheme Symfony does not ship. The method it reports is only known once it is built, so the rules a public client cannot bend are then checked on the first request to this firewall instead of while the container compiles.
+ *                 id?: scalar|Param|null, // The id of a service implementing "ClientAuthenticationInterface", for a scheme Symfony does not ship. The method it reports is only known once it is built, so the rules a public client cannot bend are then checked when a login starts on this firewall instead of while the container compiles.
  *             },
  *             dpop?: Param|string|array{ // Binds the tokens the provider issues to a key held by this client (DPoP); a token the provider did not bind is refused.
  *                 key?: scalar|Param|null, // The private key the proofs are signed with, as a JSON-encoded JWK.
@@ -1455,7 +1472,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *                 },
  *             },
  *             resource_metadata?: array{ // Declaring this node serves the RFC 9728 protected resource metadata document of the firewall at "/.well-known/oauth-protected-resource" and advertises its URL in the "resource_metadata" parameter of the "WWW-Authenticate" header, which is how a client discovers where to get a token this firewall accepts. The route is declared by the "security.route_loader" service, which the application must import. Make sure the route is reachable without a token.
- *                 resource?: scalar|Param|null, // The resource identifier of this firewall: an HTTPS URL, without a fragment (e.g. "https://api.example.com" or "https://example.com/api"). Its path component is inserted after the well-known path, as RFC 9728, Section 3.1 prescribes, so that one host can serve the metadata of several protected resources. Defaults to the origin the document is served from, which is what a firewall covering a whole application wants. // Default: null
+ *                 resource?: scalar|Param|null, // The resource identifier of this firewall: an HTTPS URL without a fragment (e.g. "https://example.com/api"), read when the container is compiled, or a path (e.g. "/api") resolved against the origin of the request. Its path is inserted after the well-known path, as RFC 9728, Section 3.1 prescribes. Defaults to the origin of the request, which is what a firewall covering a whole application wants. // Default: null
  *                 authorization_servers?: Param|string|list<scalar|Param|null>,
  *                 jwks_uri?: scalar|Param|null, // URL of the JWK Set holding the keys this resource signs its own responses with. Unrelated to the keys the access tokens are verified against, which belong to the authorization server. // Default: null
  *                 scopes_supported?: Param|string|list<scalar|Param|null>,
@@ -1821,33 +1838,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     timeout?: int|Param, // Default: 10
  *     proxy?: scalar|Param|null, // HTTP proxy override. Empty auto-selects the symfony proxy for a .wip host. // Default: "%env(default::LINGUA_PROXY)%"
  *     callback_url?: scalar|Param|null, // Absolute URL of THIS app's /webhook/lingua endpoint, e.g. https://zm.wip/webhook/lingua. Sent with every push so the server announces translations instead of making us poll with lingua:pull. Empty keeps the polling behaviour. // Default: "%env(default::LINGUA_CALLBACK_URL)%"
- * }
- * @psalm-type SurvosStateConfig = array{
- *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
- *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: "/state"
- *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
- *     queue_prefix?: scalar|Param|null, // Default: ""
- *     base_layout?: scalar|Param|null, // Default: "base.html.twig"
- *     enable_dynamic_routing?: bool|Param, // Inert as of 2026-09-12: transition routing comes from AsyncQueueLocator::stamps() at the dispatch site, not from middleware. See SurvosStateBundle::loadExtension(). // Default: true
- *     batch_size?: int|Param, // Default size for #[Transition(batch: true-ish)] groups; a transition's own batch: N wins // Default: 100
- *     batch_idle_timeout?: int|Param, // Seconds of worker idleness after which a partial batch is flushed // Default: 5
- *     batch_enabled?: bool|Param, // Off: #[Transition(batch: N)] transitions travel as plain TransitionMessages, one at a time, exactly as if unbatched. Env-able: '%env(bool:APP_BATCH)%' // Default: true
- *     allow_force_place?: scalar|Param|null, // Default: "%kernel.debug%"
- *     workflow_paths?: list<scalar|Param|null>,
- *     async_transport_dsn?: scalar|Param|null, // Default: "doctrine://default"
- *     queue_driver?: "doctrine"|"rabbitmq"|Param, // Default: "doctrine"
- *     max_priority?: int|Param, // Default: null
- *     prefetch_count?: int|Param, // Default: null
- *     queue_options?: array<string, array{ // Default: []
- *         max_priority?: int|Param,
- *         prefetch_count?: int|Param,
- *     }>,
- *     retry_strategy?: array{
- *         max_retries?: int|Param, // Default: 3
- *         delay?: int|Param, // Default: 1000
- *         multiplier?: float|Param, // Default: 2
- *         max_delay?: int|Param, // Default: 0
- *     },
  * }
  * @psalm-type SurvosTranslatorConfig = array{
  *     default_engine?: scalar|Param|null, // Name of the engine to use by default (e.g. "libre_local"). // Default: "libre_local"
@@ -2275,9 +2265,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     debug?: bool|Param, // Default: false
  *     version?: scalar|Param|null, // Default: 1
  *     db?: scalar|Param|null, // Default: "db"
- *     routing?: array{
- *         routes_to_expose?: list<scalar|Param|null>,
- *     },
+ *     routing?: array<mixed>,
  *     stores?: list<array{ // Default: []
  *         batch?: int|Param, // batch size when loading api // Default: null
  *         name?: scalar|Param|null, // the store name
@@ -2305,6 +2293,114 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     subject_store?: scalar|Param|null, // Service implementing SubjectStoreInterface; defaults to the Doctrine store when DoctrineBundle is installed. // Default: null
  *     default_transport?: scalar|Param|null, // Default: null
  *     lock_factory?: scalar|Param|null, // LockFactory serializing transitions per subject across workers. Use a store shared by every worker host. // Default: "lock.factory"
+ * }
+ * @psalm-type UxRouterConfig = array{
+ *     dump_directory?: scalar|Param|null, // The directory where routes and TypeScript types are dumped. // Default: "%kernel.project_dir%/var/routes"
+ *     dump_typescript?: bool|Param, // Control whether TypeScript types are dumped alongside routes. Disable this if you do not use TypeScript (e.g. in production when using AssetMapper). // Default: true
+ *     routes?: Param|string|list<scalar|Param|null>,
+ * }
+ * @psalm-type LiveComponentConfig = array{
+ *     secret?: scalar|Param|null, // The secret used to compute fingerprints and checksums // Default: "%kernel.secret%"
+ *     fetch_credentials?: "same-origin"|"include"|"omit"|Param, // The default fetch credentials mode for all Live Components ('same-origin', 'include', 'omit') // Default: "same-origin"
+ * }
+ * @psalm-type SurvosSearchConfig = array{
+ *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
+ *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
+ *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
+ *     default_adapter?: scalar|Param|null, // Default: "default"
+ *     public_searches?: list<scalar|Param|null>,
+ *     entity_adapters?: array<string, scalar|Param|null>,
+ *     index_prefix?: scalar|Param|null, // Prefix applied to every Elasticsearch index name, once, by ElasticIndexNameResolver. Reuses MEILI_PREFIX so one app has one index namespace across both engines. Leaving it unset is an error the first time a name is resolved: bare index names share a flat cluster namespace with every other app on the node. Set it to an empty string to share deliberately. // Default: "%env(default::MEILI_PREFIX)%"
+ *     adapters?: array<string, Param|string|array{ // Default: {"default":{"dsn":"doctrine://default"}}
+ *         dsn?: scalar|Param|null,
+ *     }>,
+ *     default_hits_per_page?: int|Param, // Default: 24
+ *     default_hits_per_page_choices?: list<int|Param>,
+ * }
+ * @psalm-type SurvosTablerConfig = array{
+ *     icons?: array{
+ *         prefix?: scalar|Param|null, // Default: "tabler"
+ *         aliases?: array<string, scalar|Param|null>,
+ *         presets?: array<string, array{ // Default: []
+ *             icon?: scalar|Param|null,
+ *             class?: scalar|Param|null, // Default: ""
+ *         }>,
+ *     },
+ *     app?: array{
+ *         code?: scalar|Param|null, // Default: "my-project"
+ *         title?: scalar|Param|null, // Default: "My Project"
+ *         description?: scalar|Param|null, // Default: ""
+ *         abbr?: scalar|Param|null, // Default: "my<b>Project</b>"
+ *         logo?: scalar|Param|null, // Default: null
+ *         logo_small?: scalar|Param|null, // Default: null
+ *         homepage_route?: scalar|Param|null, // Default: null
+ *         homepage_url?: scalar|Param|null, // Default: null
+ *         tunnel_host?: scalar|Param|null, // Default: "%env(default::TUNNEL_HOST)%"
+ *         local_host?: scalar|Param|null, // Default: "%env(default::APP_BASE_URL)%"
+ *         links?: array{
+ *             github?: scalar|Param|null, // Default: null
+ *             docs?: scalar|Param|null, // Default: null
+ *             sponsor?: scalar|Param|null, // Default: null
+ *             site?: scalar|Param|null, // Default: null
+ *             contact?: scalar|Param|null, // Default: null
+ *         },
+ *         social?: array<string, scalar|Param|null>,
+ *         meta?: array{
+ *             og_image?: scalar|Param|null, // Default: null
+ *             twitter_site?: scalar|Param|null, // Default: null
+ *             theme_color?: scalar|Param|null, // Default: null
+ *         },
+ *         header?: array{
+ *             locale_switcher?: bool|Param, // Default: true
+ *             layout?: "stacked"|"compact"|Param, // stacked: NAVBAR_MENU gets its own row under the brand. compact: brand, every nav slot and the right-hand tools share one row. // Default: "stacked"
+ *             container?: scalar|Param|null, // Default: "container-fluid"
+ *             auth?: array{
+ *                 enabled?: bool|Param, // Default: true
+ *                 show_login?: bool|Param, // Default: true
+ *                 show_user_menu?: bool|Param, // Default: true
+ *                 routes?: array{
+ *                     login?: scalar|Param|null, // Default: "app_login"
+ *                     logout?: scalar|Param|null, // Default: "app_logout"
+ *                     register?: scalar|Param|null, // Default: "app_register"
+ *                     profile?: scalar|Param|null, // Default: "app_profile"
+ *                 },
+ *             },
+ *         },
+ *     },
+ *     favicon?: array{
+ *         enabled?: bool|Param, // Serve a dynamic SVG favicon at /favicon.svg so apps get a useful icon without a favicon-generator workflow. // Default: true
+ *         text?: scalar|Param|null, // 1-2 characters shown on the icon. Defaults to initials derived from app.code. // Default: null
+ *         background?: scalar|Param|null, // Background fill, e.g. a distinct color per environment (prod/wip/dev/test). // Default: "#206bc4"
+ *         foreground?: scalar|Param|null, // Text color. // Default: "#ffffff"
+ *         shape?: "square"|"rounded"|"circle"|Param, // Default: "rounded"
+ *     },
+ *     routes?: array{
+ *         home?: scalar|Param|null, // Default: "app_homepage"
+ *         login?: scalar|Param|null, // Default: null
+ *         logout?: scalar|Param|null, // Default: null
+ *         register?: scalar|Param|null, // Default: null
+ *         profile?: scalar|Param|null, // Default: null
+ *         settings?: scalar|Param|null, // Default: null
+ *         search?: scalar|Param|null, // Default: null
+ *     },
+ *     debug?: array{
+ *         menu_slots?: bool|Param, // Default: false
+ *         admin_toolbar?: bool|Param, // Render the orange admin menu toolbar (navbar_admin) for admins/debug. Defaults to the TABLER_ADMIN_TOOLBAR env var (1); developers can set TABLER_ADMIN_TOOLBAR=0 in .env.local to hide it. // Default: "%env(bool:TABLER_ADMIN_TOOLBAR)%"
+ *     },
+ *     options?: array{
+ *         theme?: scalar|Param|null, // Default: "tabler"
+ *         layout?: "horizontal"|"dashboard"|"vertical"|"condensed"|Param, // Default: "horizontal"
+ *         dark_mode?: bool|Param, // Default: false
+ *         show_locale_dropdown?: bool|Param, // Default: true
+ *     },
+ *     auto_breadcrumbs?: bool|Param, // Build the BREADCRUMB slot from the page's entities: each object option whose class has a #[RouteMeta(entity:, purpose: Show)] route becomes a crumb. See BreadcrumbMenuSubscriber. // Default: false
+ *     menu_renderer?: "knp"|"survos"|Param, // How tabler_menu() draws menus. knp: KnpMenu templates (@SurvosTabler/menu/*). survos: survos/menu-bundle themes (@SurvosTabler/menu_theme/*); register SurvosMenuBundle first. Same listeners either way. // Default: "knp"
+ *     menu_themes?: array<string, scalar|Param|null>,
+ *     menu_options?: array<string, scalar|Param|null>,
+ *     impersonate?: array<string, scalar|Param|null>,
+ *     routes_enabled?: bool|Param, // Set false to manage this bundle's routes manually in your app. Bundles exposing sensitive routes (e.g. running console commands) should default this off. // Default: true
+ *     route_prefix?: scalar|Param|null, // URL prefix applied to all routes from this bundle. // Default: ""
+ *     locale_prefix?: bool|Param, // Prepend {_locale} (constrained to kernel.enabled_locales) to this bundle's route prefix, e.g. /{_locale}/f instead of /f -- for bundles whose routes are meant to be shared/bookmarked, so the URL itself carries the locale instead of a query param. // Default: false
  * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
@@ -2346,7 +2442,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_ez?: SurvosEzConfig,
  *     ux_icons?: UxIconsConfig,
  *     survos_lingua?: SurvosLinguaConfig,
- *     survos_state?: SurvosStateConfig,
  *     survos_translator?: SurvosTranslatorConfig,
  *     nelmio_cors?: NelmioCorsConfig,
  *     api_platform?: ApiPlatformConfig,
@@ -2362,6 +2457,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     knp_menu?: KnpMenuConfig,
  *     survos_workflow_extras?: SurvosWorkflowExtrasConfig,
  *     survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
+ *     ux_router?: UxRouterConfig,
+ *     live_component?: LiveComponentConfig,
+ *     survos_search?: SurvosSearchConfig,
+ *     survos_tabler?: SurvosTablerConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -2406,7 +2505,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_ez?: SurvosEzConfig,
  *         ux_icons?: UxIconsConfig,
  *         survos_lingua?: SurvosLinguaConfig,
- *         survos_state?: SurvosStateConfig,
  *         survos_translator?: SurvosTranslatorConfig,
  *         nelmio_cors?: NelmioCorsConfig,
  *         api_platform?: ApiPlatformConfig,
@@ -2423,6 +2521,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         knp_menu?: KnpMenuConfig,
  *         survos_workflow_extras?: SurvosWorkflowExtrasConfig,
  *         survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
+ *         ux_router?: UxRouterConfig,
+ *         live_component?: LiveComponentConfig,
+ *         survos_search?: SurvosSearchConfig,
+ *         survos_tabler?: SurvosTablerConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -2464,7 +2566,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_ez?: SurvosEzConfig,
  *         ux_icons?: UxIconsConfig,
  *         survos_lingua?: SurvosLinguaConfig,
- *         survos_state?: SurvosStateConfig,
  *         survos_translator?: SurvosTranslatorConfig,
  *         nelmio_cors?: NelmioCorsConfig,
  *         api_platform?: ApiPlatformConfig,
@@ -2480,6 +2581,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         knp_menu?: KnpMenuConfig,
  *         survos_workflow_extras?: SurvosWorkflowExtrasConfig,
  *         survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
+ *         ux_router?: UxRouterConfig,
+ *         live_component?: LiveComponentConfig,
+ *         survos_search?: SurvosSearchConfig,
+ *         survos_tabler?: SurvosTablerConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -2523,7 +2628,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_ez?: SurvosEzConfig,
  *         ux_icons?: UxIconsConfig,
  *         survos_lingua?: SurvosLinguaConfig,
- *         survos_state?: SurvosStateConfig,
  *         survos_translator?: SurvosTranslatorConfig,
  *         nelmio_cors?: NelmioCorsConfig,
  *         api_platform?: ApiPlatformConfig,
@@ -2540,6 +2644,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         knp_menu?: KnpMenuConfig,
  *         survos_workflow_extras?: SurvosWorkflowExtrasConfig,
  *         survos_workflow_messenger?: SurvosWorkflowMessengerConfig,
+ *         ux_router?: UxRouterConfig,
+ *         live_component?: LiveComponentConfig,
+ *         survos_search?: SurvosSearchConfig,
+ *         survos_tabler?: SurvosTablerConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
@@ -2586,6 +2694,9 @@ namespace Symfony\Component\Routing\Loader\Configurator;
  * @psalm-type RouteConfig = array{
  *     path: string|array<string,string>,
  *     controller?: string,
+ *     template?: string,
+ *     redirect_to_route?: string,
+ *     redirect_to?: string,
  *     methods?: string|list<string>,
  *     requirements?: array<string,string>,
  *     defaults?: array<string,mixed>,

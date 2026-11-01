@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use function Symfony\Component\Translation\t;
 
-#[AdminDashboard('/', self::MEILI_ROUTE)]
+#[AdminDashboard('/admin', self::MEILI_ROUTE)]
 class MeiliDashboardController extends AbstractMeiliController
 
 {

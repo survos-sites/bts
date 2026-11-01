@@ -1,0 +1,11 @@
+<article class="card h-100">
+    {% if hit.image %}<img src="{{ hit.image }}" alt="{{ (hit.getResolvedTranslation('object') ?? hit.getBackingValue('object')) }}" class="card-img-top" loading="lazy" style="height: 180px; object-fit: contain">{% endif %}
+    <div class="card-body">
+        <div class="text-secondary small">{{ hit.code }}</div>
+        <h2 class="h3">{{ (hit.getResolvedTranslation('object') ?? hit.getBackingValue('object')) }}</h2>
+        <p>{{ (hit.getResolvedTranslation('subcategorie') ?? hit.getBackingValue('subcategorie')) }}</p>
+        <span class="badge bg-blue-lt">{{ hit.categorie }}</span>
+        <span class="badge bg-secondary-lt">{{ hit.projectCode }}</span>
+    </div>
+    <div class="card-footer"><a href="{{ path('_api_/amsts/{code}{._format}_get', {code: hit.code, _format: 'jsonld'}) }}">{{ 'catalog.view'|trans }}</a></div>
+</article>

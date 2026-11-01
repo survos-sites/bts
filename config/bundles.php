@@ -42,4 +42,8 @@ return [
     Survos\MenuBundle\SurvosMenuBundle::class => ['all' => true],
     Survos\WorkflowExtrasBundle\SurvosWorkflowExtrasBundle::class => ['all' => true],
     Survos\WorkflowMessengerBundle\SurvosWorkflowMessengerBundle::class => ['all' => true],
+    Symfony\UX\Router\UXRouterBundle::class => ['all' => true],
+    Symfony\UX\LiveComponent\LiveComponentBundle::class => ['all' => true],
+    Survos\SearchBundle\SurvosSearchBundle::class => ['all' => true],
+    Survos\TablerBundle\SurvosTablerBundle::class => ['all' => true],
 ];

@@ -58,6 +58,53 @@
                 }
             }
         },
+        "@survos/search-bundle": {
+            "ux-search": {
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "@survos/search-bundle/styles/ux-search.css": true
+                }
+            },
+            "ux-search--refinement-list": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "ux-search-range-slider": {
+                "enabled": true,
+                "fetch": "eager"
+            },
+            "instantsearch": {
+                "enabled": false,
+                "fetch": "lazy"
+            }
+        },
+        "@survos/tabler-bundle": {
+            "accordion": {
+                "enabled": true,
+                "fetch": "lazy"
+            },
+            "search": {
+                "enabled": true,
+                "fetch": "lazy"
+            },
+            "clipboard": {
+                "enabled": true,
+                "fetch": "lazy"
+            },
+            "closeable": {
+                "enabled": true,
+                "fetch": "lazy"
+            },
+            "tooltip": {
+                "enabled": true,
+                "fetch": "lazy"
+            },
+            "conditional-fields": {
+                "enabled": true,
+                "fetch": "lazy"
+            }
+        },
         "@survos/workflow-extras-bundle": {
             "workflow": {
                 "enabled": true,
@@ -68,6 +115,15 @@
             "chart": {
                 "enabled": true,
                 "fetch": "eager"
+            }
+        },
+        "@symfony/ux-live-component": {
+            "live": {
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "@symfony/ux-live-component/dist/live.min.css": true
+                }
             }
         },
         "@symfony/ux-turbo": {
