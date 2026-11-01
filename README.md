@@ -30,6 +30,8 @@ php ../mono/link .
 The public homepage is `/{locale}/` (for example `/en/` or `/nl/`), using
 TablerBundle. It explains the project, credits the source, and links to the
 original CSV downloads, documentation, reuse terms, code and related work.
+Navigation is built by `src/Menu/AppMenu.php` using Tabler's standard menu slots;
+route labels are translated in `translations/routing.en.yaml` and `routing.nl.yaml`.
 SearchBundle browsing is at `/{locale}/search`, with keyword search,
 project/category facets, sorting and pagination. EasyAdmin remains at `/{locale}/admin` for edit
 and workflow experiments. The public API is GET-only:
