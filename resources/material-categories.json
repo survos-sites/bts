@@ -1,0 +1,87 @@
+{
+  "source": "https://api.belowthesurface.amsterdam/object",
+  "field_guide": "https://statics.belowthesurface.amsterdam/downloadbare-datasets/Data_fields_description.xlsx",
+  "retrieved": "2026-11-01",
+  "categories": {
+    "BWM": {
+      "example": "NZD1.00014BWM003",
+      "nl": "Bouwmaterialen",
+      "en": "Building material"
+    },
+    "CER": {
+      "example": "NZD1.00003CER001-01",
+      "nl": "Aardewerk",
+      "en": "Ceramics"
+    },
+    "CPY": {
+      "example": "NZD1.00007CPY002-01",
+      "nl": "Pijpaarde",
+      "en": "Pipe clay"
+    },
+    "FAU": {
+      "example": "NZD1.00007FAU002",
+      "nl": "Fauna",
+      "en": "Fauna"
+    },
+    "GLS": {
+      "example": "NZD1.00007GLS003",
+      "nl": "Glas",
+      "en": "Glass"
+    },
+    "HT": {
+      "example": "NZD1.00018HT001",
+      "nl": "Hout",
+      "en": "Wood"
+    },
+    "KSC": {
+      "example": "NZD1.00027KSC001",
+      "nl": "Sculpturen",
+      "en": "Sculptures"
+    },
+    "KST": {
+      "example": "NZD1.00007KST002",
+      "nl": "Kunststof",
+      "en": "Synthetics"
+    },
+    "LEE": {
+      "example": "NZD1.00022LEE006",
+      "nl": "Leer",
+      "en": "Leather"
+    },
+    "MIX": {
+      "example": "NZD1.00044MIX001",
+      "nl": "Gemengd",
+      "en": "Mixed"
+    },
+    "MTL": {
+      "example": "NZC1.00002MTL001",
+      "nl": "Metaal",
+      "en": "Metal"
+    },
+    "PLT": {
+      "example": "NZD1.00040PLT001",
+      "nl": "Plantaardig",
+      "en": "Botanical"
+    },
+    "STN": {
+      "example": "NZD1.00022STN001-01",
+      "nl": "Natuursteen",
+      "en": "Natural stone"
+    },
+    "TW": {
+      "example": "NZD1.00022TW001",
+      "nl": "Touw",
+      "en": "Rope"
+    },
+    "TXT": {
+      "example": "NZD1.00023TXT001",
+      "nl": "Textiel",
+      "en": "Textile"
+    },
+    "VST": {
+      "example": "NZD1.00088VST001",
+      "nl": "Vuursteen",
+      "en": "Flint"
+    }
+  }
+}

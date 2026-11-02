@@ -31,11 +31,12 @@ final class PublishedFindImportTest extends KernelTestCase
     public function testPublishedFindRetainsSourceLinkAndImage(): void
     {
         $event = new ImportConvertRowEvent(
-            ['vondstnummer' => 'NZC1.00002MTL001', 'website' => '1', 'object' => 'miniatuur'],
+            ['vondstnummer' => 'NZC1.00002MTL001', 'website' => '1', 'object' => 'miniatuur', 'categorie' => ' mtl '],
             input: 'archive.csv', format: 'csv', index: 1, dataset: 'amst',
         );
         self::getContainer()->get(EventDispatcherInterface::class)->dispatch($event);
         self::assertNotNull($event->row);
+        self::assertSame('MTL', $event->row['categorie']);
         self::assertSame('NZC1-00002MTL001', $event->row['code']);
         self::assertSame('https://belowthesurface.amsterdam/nl/vondst/NZC1.00002MTL001', $event->row['citation_url']);
         self::assertSame('https://statics.belowthesurface.amsterdam/vondst/600/NZC1.00002MTL001(01).png', $event->row['image']);

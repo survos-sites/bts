@@ -1,0 +1,3 @@
+{% extends '@!SurvosSearch/CurrentRefinements.html.twig' %}
+
+{% block term_label %}{{ active_filter.property == 'categorie' ? value|category_label : parent() }}{% endblock %}

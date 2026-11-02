@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Enhance;
 
+use App\Import\MaterialCategories;
 use Sentry\HttpClient\HttpClient;
 use Survos\ImportBundle\Event\ImportConvertFinishedEvent;
 use Survos\JsonlBundle\Event\JsonlConvertStartedEvent;
@@ -20,7 +23,8 @@ class EnhanceRecordListener
     public function __construct(
         private SluggerInterface    $asciiSlugger,
         private HttpClientInterface $httpClient,
-        private MediaRegistry $mediaRegistry
+        private MediaRegistry $mediaRegistry,
+        private MaterialCategories $categories
     )
     {
     }
@@ -50,6 +54,7 @@ class EnhanceRecordListener
                         $event->row = null;
                         return;
                     }
+                    $record['categorie'] = $this->categories->normalize($record['categorie']);
                     // The source CSV includes finds that have no public detail page or image.
                     unset($record['citation_url'], $record['image']);
                     if ($record['website']) {

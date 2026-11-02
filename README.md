@@ -76,6 +76,30 @@ original source when a citation exists. The `{}` button opens an andypf JSON
 viewer with null/empty values removed recursively, while preserving zero and
 false values.
 
+## Material categories
+
+`categorie` is the material-category code, distinct from the functional hierarchy
+in `niveau1`–`niveau4`. The official
+[field workbook](https://statics.belowthesurface.amsterdam/downloadbare-datasets/Data_fields_description.xlsx)
+describes these fields but contains no category lookup table. The site's own
+[object API](https://api.belowthesurface.amsterdam/object?vondstnummer=NZC1.00002MTL001&generated_taal=en)
+supplies `generated_categorie` in Dutch and English. Those labels are checked into
+`resources/material-categories.json`, with an example find for every code and the
+retrieval date. They cover all 16 named categories in the published upstream CSV.
+The one published `XXX` find has no category label upstream; the app explicitly
+calls it “Unclassified” / “Niet ingedeeld”.
+
+The existing conversion callback canonicalizes and validates category codes via
+`MaterialCategories`. Unknown published codes fail normalization instead of being
+silently assigned a made-up category. Codes remain in Doctrine, API responses and
+filter URLs. Cards, facet choices and selected-filter chips display the source's
+labels for the chosen language, without Lingua calls. The two three-line SearchBundle
+Twig overrides extend the original templates and customize only `item_label`
+and `term_label`; submitted facet values remain codes.
+Existing local records show the labels immediately, with no schema change or
+reimport required. Other interface languages use the Dutch source labels until
+supplied translations are available.
+
 ## Translations
 
 Source text is Dutch. Babel stores backing text on `Amst`, and translations in

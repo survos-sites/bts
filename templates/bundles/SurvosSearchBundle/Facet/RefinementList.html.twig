@@ -1,0 +1,3 @@
+{% extends '@!SurvosSearch/Facet/RefinementList.html.twig' %}
+
+{% block item_label %}{{ property == 'categorie' ? key|category_label : parent() }}{% endblock %}

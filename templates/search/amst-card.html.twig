@@ -14,7 +14,7 @@
         <div class="text-secondary small">{{ hit.code }}</div>
         <h2 class="h3">{% if hit.citationUrl %}<a href="{{ hit.citationUrl }}" class="text-reset" rel="external">{{ label }}</a>{% else %}{{ label }}{% endif %}</h2>
         <p>{{ hit.getResolvedTranslation('subcategorie') ?? hit.getBackingValue('subcategorie') }}</p>
-        <span class="badge bg-blue-lt">{{ hit.categorie }}</span>
+        <span class="badge bg-blue-lt">{{ hit.categorie|category_label }}</span>
         <span class="badge bg-secondary-lt">{{ hit.projectCode }}</span>
     </div>
     {% if hit.citationUrl %}<div class="card-footer"><a href="{{ hit.citationUrl }}" rel="external">{{ 'catalog.source'|trans }} ↗</a></div>{% endif %}
