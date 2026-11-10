@@ -4,5 +4,5 @@
 {% block page_title %}Below the Surface{% endblock %}
 {% block body %}
     <p class="text-secondary mb-4">{{ 'catalog.intro'|trans }}</p>
-    <twig:Survos:Search:Layout name="amst" :urlRewriting="true" :initialQuery="{sort: 'o.code:asc'}" />
+    <twig:Survos:Search:Layout name="amst" :urlRewriting="true" />
 {% endblock %}

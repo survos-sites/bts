@@ -26,7 +26,9 @@ php ../mono/link .
 ```
 
 The public homepage is `/{locale}/` (for example `/en/` or `/nl/`), using
-TablerBundle. It explains the project, credits the source, and links to the
+TablerBundle. Only Dutch and English are enabled, including the locale dropdown
+and admin routes; additional languages are deferred until folio support.
+It explains the project, credits the source, and links to the
 original CSV downloads, documentation, reuse terms, code and related work.
 Navigation is built by `src/Menu/AppMenu.php` using Tabler's standard menu slots;
 route labels are translated in `translations/routing.en.yaml` and `routing.nl.yaml`.
@@ -155,12 +157,11 @@ matches for `munt`, collection/item API responses, and the native workflow.
 
 ## Local DuckDB experiment
 
-The `1.0` tag preserves the SQLite baseline. Branch `codex/duckdb-catalog` keeps
+The `1.0` tag preserves the SQLite baseline. The DuckDB catalog keeps
 `Amst`, its repository and the existing single Doctrine entity manager, and
 switches `DATABASE_URL` to a writable local DuckDB file. SearchBundle continues
-using its Doctrine adapter; Elasticsearch and Meilisearch are not used for
-catalog queries. Meili dependencies and integration have been removed in this branch.
-Vector search is a later stage of the DuckDB experiment.
+using Doctrine for catalog queries and filters. Smart Search ranks a small
+sample using image observations and DuckDB cosine similarity.
 
 Install `ext-pdo_duckdb` with DuckDB 2.x before `composer install`; Composer does
 not install the native extension. The DBAL driver and DuckDB bundle are Composer
@@ -218,3 +219,25 @@ FrankenPHP is a packaging choice, not an engine requirement. S3 publication and
 read-only runtime checks remain a separate next step; no fsn1 app is provisioned
 by this local experiment. x10's S3 endpoint is SeaweedFS on port 8333. WD-backed
 RustFS on port 9000 is never used.
+
+## Smart Search sample
+
+Set `MEDIARY_API_TOKEN` and `OPENAI_API_KEY` in `.env.local`. Use a writable
+local DuckDB catalog. To observe and embed a sample of up to eight published
+finds, one per material category:
+
+```bash
+php bin/console app:observe-sample --limit=8
+```
+
+The command registers images through MediaBundle, reads Mediary's persisted
+observations, and embeds the resulting prose. Add `--observe-only` to defer
+embedding. Repeat runs reuse observations and vectors for the same inputs.
+Run the command separately from the web app because the batch can hold a DuckDB
+write connection while it waits on remote services.
+
+The `bts_observation` and `bts_observation_vector` tables hold the derived data.
+They leave the Dutch source text and its Babel translations intact. Smart Search
+appears when the configured embedding profile has indexed finds. It searches
+that sample, while Instant Search continues to search the full catalog in the
+selected language. This sample takes text queries against image descriptions.

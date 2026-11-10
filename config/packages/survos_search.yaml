@@ -2,3 +2,4 @@ survos_search:
     default_adapter: default
     adapters:
         default: 'doctrine://default'
+        amst: 'amst://default'

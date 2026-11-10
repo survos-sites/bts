@@ -12,7 +12,7 @@ use Survos\SearchBundle\Search\HitTemplateSearchInterface;
 use Survos\SearchBundle\Twig\Components\Facet\RefinementList;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsSearch(index: Amst::class, name: 'amst')]
+#[AsSearch(index: Amst::class, name: 'amst', adapter: 'amst')]
 final class AmstSearch extends AbstractSearch implements HitTemplateSearchInterface
 {
     public function __construct(private readonly TranslatorInterface $translator)
