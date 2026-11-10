@@ -2302,6 +2302,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * @psalm-type SurvosDuckDbConfig = array{
  *     profiling?: bool|Param|null, // Default: null
  *     collect_schema?: bool|Param, // Default: true
+ *     pool?: array{
+ *         ttl?: int|Param, // Seconds a pooled connection is reused before reopening; 0 = never expire. // Default: 300
+ *         max_connections?: int|Param, // Default: 8
+ *     },
  *     max_queries?: int|Param, // Default: 500
  *     sources?: array<string, array{ // Default: []
  *         uri?: scalar|Param|null,

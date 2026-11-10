@@ -9167,6 +9167,27 @@
                         "$ref": "#/$defs/types/boolean",
                         "default": true
                     },
+                    "pool": {
+                        "$ref": "#/$defs/types/object_null",
+                        "properties": {
+                            "ttl": {
+                                "$ref": "#/$defs/types/integer",
+                                "minimum": 0,
+                                "default": 300,
+                                "description": "Seconds a pooled connection is reused before reopening; 0 = never expire."
+                            },
+                            "max_connections": {
+                                "$ref": "#/$defs/types/integer",
+                                "minimum": 1,
+                                "default": 8
+                            }
+                        },
+                        "additionalProperties": false,
+                        "default": {
+                            "ttl": 300,
+                            "max_connections": 8
+                        }
+                    },
                     "max_queries": {
                         "$ref": "#/$defs/types/integer",
                         "minimum": 1,
